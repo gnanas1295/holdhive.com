@@ -1,0 +1,10 @@
+/* Styles for pagination buttons */
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Card spacing and alignment */
+  .d-flex.flex-wrap .card {
+    margin: 10px;
+  }
