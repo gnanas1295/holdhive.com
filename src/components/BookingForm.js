@@ -1,8 +1,14 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 const BookingForm = ({ item, days, onClose }) => {
-  const totalCost = item.price * days;
+  const totalCost = (item.price || 0) * (days || 1);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Storage Unit "${item.title}" booked successfully for ${days} days at a total cost of $${totalCost.toFixed(2)}!`);
+    onClose(); // Close the modal after booking
+  };
 
   return (
     <Modal show onHide={onClose}>
@@ -10,30 +16,33 @@ const BookingForm = ({ item, days, onClose }) => {
         <Modal.Title>Book {item.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p><strong>Description:</strong> {item.description}</p>
-        <p><strong>Location:</strong> {item.location}</p>
-        <p><strong>Price per Day:</strong> ${item.price}</p>
-        <p><strong>Total Cost:</strong> ${totalCost} for {days} day(s)</p>
-        <form>
-          <div className="form-group">
-            <label>Your Name</label>
-            <input type="text" className="form-control" required />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" className="form-control" required />
-          </div>
-          <div className="form-group">
-            <label>Phone Number</label>
-            <input type="text" className="form-control" required />
-          </div>
-        </form>
+        <Form onSubmit={handleSubmit}>
+          <p>
+            <strong>Location:</strong> {item.location}
+          </p>
+          <p>
+            <strong>Price per Day:</strong> ${item.price.toFixed(2)}
+          </p>
+          <p>
+            <strong>Total Cost for {days} Day(s):</strong> ${totalCost.toFixed(2)}
+          </p>
+          <Form.Group controlId="userName">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter your name" required />
+          </Form.Group>
+          <Form.Group controlId="userEmail" className="mt-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" placeholder="Enter your email" required />
+          </Form.Group>
+          <Button variant="primary" type="submit" className="mt-4 w-100">
+            Confirm Booking
+          </Button>
+        </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        <Button variant="primary">Confirm Booking</Button>
       </Modal.Footer>
     </Modal>
   );

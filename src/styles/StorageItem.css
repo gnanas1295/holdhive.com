@@ -1,0 +1,21 @@
+/* Storage Card */
+.storage-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .storage-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Gradient Button */
+  .gradient-btn {
+    background: linear-gradient(to right, #4caf50, #81c784);
+    border: none;
+    color: white;
+    transition: background 0.3s ease;
+  }
+
+  .gradient-btn:hover {
+    background: linear-gradient(to right, #388e3c, #66bb6a);
+  }

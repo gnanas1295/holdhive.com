@@ -1,0 +1,26 @@
+/* Header.css */
+
+/* Navbar brand styling */
+.navbar-brand {
+    font-size: 1.5rem;
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hover effect for links */
+  .nav-link {
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: #feb47b !important;
+  }
+
+  /* Custom button hover */
+  .btn-outline-light:hover {
+    color: #fff;
+    background-color: #feb47b;
+    border-color: #feb47b;
+  }

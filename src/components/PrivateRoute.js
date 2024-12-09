@@ -6,9 +6,12 @@ import { auth } from '../firebase';
 const PrivateRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    // Show a loading spinner or placeholder while the auth state is loading
+    return <div>Loading...</div>;
+  }
 
-  return user ? children : <Navigate to="/auth" />;
+  return user ? children : <Navigate to="/auth" replace />;
 };
 
 export default PrivateRoute;
