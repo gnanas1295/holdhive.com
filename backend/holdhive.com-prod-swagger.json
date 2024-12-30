@@ -1,0 +1,3306 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "2024-12-30T22:57:31Z",
+    "title" : "holdhive.com"
+  },
+  "host" : "0ixtfa5608.execute-api.eu-west-1.amazonaws.com",
+  "basePath" : "/prod",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/profile" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/list-all-users" : {
+      "get" : {
+        "description" : "Fetches a list of all users registered in the system. No parameters are required for this call",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListUsersResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/remove-user" : {
+      "post" : {
+        "description" : "Deletes a user from the database along with their associated data, provided there are no active or future rentals or bookings.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "RemoveUserRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RemoveUserRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/RemoveUserResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/user-creation" : {
+      "post" : {
+        "description" : "Creates a new user profile in the database after successful Firebase authentication. Includes user details like email, name, and role.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "UserCreationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserCreationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UserCreationResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/user-role-updation" : {
+      "post" : {
+        "description" : "Updates the role of an existing user (e.g., from user to admin).",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "UserRoleUpdateRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRoleUpdateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UserRoleUpdateResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/user-updation" : {
+      "post" : {
+        "description" : "Updates the details of an existing user, including their name, address, and other profile information.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "UserUpdateRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserUpdateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UserUpdateResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/users" : {
+      "get" : {
+        "description" : "Fetches details of a specific user based on the user_id parameter. An action parameter is also required to specify the operation.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "action",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/GetUserResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/create-rental" : {
+      "post" : {
+        "description" : "Creates a new rental record for a storage space. Checks for date conflicts before proceeding.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CreateRentalRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CreateRentalRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/CreateRentalResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/delete-rental" : {
+      "post" : {
+        "description" : "Deletes a rental record from the database. Ensures no active or future rentals are associated.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "DeleteRentalRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DeleteRentalRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/DeleteRentalResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/list-all-rentals" : {
+      "get" : {
+        "description" : "Retrieves all rental records from the database. Useful for administrative or reporting purposes.",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListAllRentalsResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/list-rental-by-owner-id" : {
+      "get" : {
+        "description" : "Fetches all rentals for storage spaces owned by a specific user (owner_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "owner_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListRentalByOwnerIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/list-rental-by-rental-id" : {
+      "get" : {
+        "description" : "Retrieves details of a specific rental based on the rental_id parameter.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "rental_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListRentalByRentalIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/list-rental-by-renter-id" : {
+      "get" : {
+        "description" : "Fetches all rentals made by a specific user (renter_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "renter_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListRentalByRenterIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental-service/list-rental-by-storage-id" : {
+      "get" : {
+        "description" : "Retrieves all rentals associated with a specific storage space (storage_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "storage_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListRentalByStorageIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/create-review" : {
+      "post" : {
+        "description" : "Creates or updates a review for a storage space by a user. Ensures only one review per user per storage space.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CreateReviewRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CreateReviewRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/CreateReviewResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/delete-review-by-id" : {
+      "post" : {
+        "description" : "Deletes a specific review based on its review_id.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "DeleteReviewByIdRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DeleteReviewByIdRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/DeleteReviewByIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/list-reviews" : {
+      "get" : {
+        "description" : "Lists all reviews across the platform. Useful for general reporting or monitoring.",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListReviewsResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "description" : "",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/list-reviews-by-owner-id" : {
+      "get" : {
+        "description" : "Retrieves reviews associated with storage spaces owned by a specific user (owner_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "owner_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListReviewsByOwnerIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/list-reviews-by-review-id" : {
+      "get" : {
+        "description" : "Fetches details of a specific review based on the review_id.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "review_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListReviewByReviewIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/list-reviews-by-storage-id" : {
+      "get" : {
+        "description" : "Retrieves all reviews for a specific storage space (storage_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "storage_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListReviewsByStorageIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-service/update-review-by-id" : {
+      "post" : {
+        "description" : "Updates a review by its review_id. Useful for editing review content or ratings.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "UpdateReviewByIdRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateReviewByIdRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UpdateReviewByIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/add-storage-location" : {
+      "post" : {
+        "description" : "Adds a new storage location. Requires details like title, description, storage type, and price.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "AddStorageLocationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AddStorageLocationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/AddStorageLocationResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/check-availablity-date-storage-id" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "start_date",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "end_date",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "storage_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/CheckAvailabilityDateStorageIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/delete-storage-location" : {
+      "post" : {
+        "description" : "Deletes a storage location if no active or future rentals exist for it.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "DeleteStorageLocationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DeleteStorageLocationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/DeleteStorageLocationResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/list-storage-location" : {
+      "get" : {
+        "description" : "Retrieves all available storage locations across the platform.",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListStorageLocationResponse"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/list-storage-location-available-date-range" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "start_date",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "end_date",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListStorageLocationAvailableDateRangeResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/list-storage-location-by-id" : {
+      "get" : {
+        "description" : "Fetches details of a specific storage location (storage_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "storage_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListStorageLocationByIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/list-storage-location-by-owner-id" : {
+      "get" : {
+        "description" : "Lists all storage locations owned by a specific user (user_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListStorageLocationByOwnerIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/storage-location/update-storage-location" : {
+      "post" : {
+        "description" : "Updates the details of an existing storage location. Useful for modifying price, description, or availability.",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "UpdateStorageLocationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateStorageLocationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UpdateStorageLocationResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ListStorageLocationByIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Storage location fetched successfully')."
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing information about the requested storage location. This array will contain exactly one item.",
+          "items" : {
+            "type" : "object",
+            "description" : "Details of the storage location.",
+            "properties" : {
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the storage location."
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who owns the storage location."
+              },
+              "title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage location."
+              },
+              "description" : {
+                "type" : "string",
+                "description" : "A description of the storage location."
+              },
+              "size" : {
+                "type" : "number",
+                "description" : "The size of the storage location (consider using a unit)."
+              },
+              "location" : {
+                "type" : "string",
+                "description" : "The general location of the storage location (e.g., '123 Main St, Dublin')."
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price for renting the storage location."
+              },
+              "availability" : {
+                "type" : "string",
+                "description" : "The current availability status of the storage location (e.g., 'available')."
+              },
+              "images_url" : {
+                "type" : "string",
+                "description" : "The URL of an image representing the storage location (optional)."
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether insurance is included (e.g., true for yes, false for no)."
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was created (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "updated_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was last updated (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Eircode (Irish postcode) for the storage location."
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+              }
+            },
+            "required" : [ "availability", "description", "location", "owner_id", "price_per_month", "size", "storage_id", "storage_type", "title" ]
+          }
+        }
+      },
+      "title" : "ListStorageLocationByIdResponse",
+      "description" : "Response containing details about a storage location identified by its ID."
+    },
+    "DeleteRentalRequest" : {
+      "type" : "object",
+      "required" : [ "action", "rental_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'delete_rental')",
+          "enum" : [ "delete_rental" ]
+        },
+        "rental_id" : {
+          "type" : "string",
+          "description" : "The ID of the rental to be deleted"
+        }
+      },
+      "title" : "DeleteRentalRequest"
+    },
+    "RemoveUserRequest" : {
+      "type" : "object",
+      "required" : [ "action", "data" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'remove_user')",
+          "enum" : [ "remove_user" ]
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Data containing user information",
+          "properties" : {
+            "user_id" : {
+              "type" : "string",
+              "description" : "The unique identifier of the user to remove"
+            }
+          },
+          "required" : [ "user_id" ]
+        }
+      },
+      "title" : "RemoveUserRequest"
+    },
+    "ListRentalByStorageIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each rental",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "rental_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the rental"
+              },
+              "start_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The start date of the rental period (YYYY-MM-DD)"
+              },
+              "end_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The end date of the rental period (YYYY-MM-DD)"
+              },
+              "total_price" : {
+                "type" : "number",
+                "description" : "The total price of the rental"
+              },
+              "payment_status" : {
+                "type" : "string",
+                "description" : "The payment status of the rental (e.g., 'paid', 'pending', 'failed')"
+              },
+              "renter_id" : {
+                "type" : "string",
+                "description" : "The ID of the renter"
+              },
+              "renter_name" : {
+                "type" : "string",
+                "description" : "The renter's full name"
+              },
+              "renter_email" : {
+                "type" : "string",
+                "description" : "The renter's email address"
+              },
+              "renter_phone" : {
+                "type" : "string",
+                "description" : "The renter's phone number"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the storage unit owner"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The owner's full name"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The owner's email address"
+              },
+              "owner_phone" : {
+                "type" : "string",
+                "description" : "The owner's phone number"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being rented"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "storage_size" : {
+                "type" : "number",
+                "description" : "The size of the storage unit"
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The address of the storage unit"
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price of the storage unit"
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether the rental includes optional insurance"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Irish Eircode (postal code) for the storage unit"
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage unit (e.g., 'Roof', 'Basement', 'Garage')"
+              }
+            },
+            "required" : [ "end_date", "insurance_option", "owner_id", "payment_status", "price_per_month", "rental_id", "renter_id", "start_date", "storage_id", "storage_title", "storage_type", "total_price" ]
+          }
+        }
+      },
+      "title" : "ListRentalByStorageIdResponse"
+    },
+    "CreateRentalResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional information about the response",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "A more detailed message"
+            }
+          }
+        }
+      },
+      "title" : "CreateRentalResponse"
+    },
+    "DeleteReviewByIdResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the deletion operation"
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the response",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "More specific message about the deletion"
+            }
+          }
+        }
+      },
+      "title" : "DeleteReviewByIdResponse"
+    },
+    "UpdateStorageLocationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "A general message indicating the result of the operation (e.g., 'Storage location updated successfully')."
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Optional data containing more specific information about the update.",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "A more specific message about the update (e.g., 'Storage location updated')."
+            }
+          }
+        }
+      },
+      "title" : "UpdateStorageLocationResponse",
+      "description" : "Response indicating the outcome of the update storage location operation."
+    },
+    "AddStorageLocationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Storage location added successfully')."
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the response (optional).",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "A more specific message about the creation (e.g., 'Storage location added')."
+            }
+          }
+        }
+      },
+      "title" : "AddStorageLocationResponse",
+      "description" : "Response confirming the successful creation of a storage location."
+    },
+    "ListStorageLocationAvailableDateRangeResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Storage locations fetched successfully')."
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing information about each available storage location.",
+          "items" : {
+            "type" : "object",
+            "description" : "Details of an individual storage location.",
+            "properties" : {
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the storage location."
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who owns the storage location."
+              },
+              "title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage location."
+              },
+              "description" : {
+                "type" : "string",
+                "description" : "A description of the storage location."
+              },
+              "size" : {
+                "type" : "number",
+                "description" : "The size of the storage location (consider using a unit)."
+              },
+              "location" : {
+                "type" : "string",
+                "description" : "The general location of the storage location (e.g., '123 Main St, Dublin')."
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price for renting the storage location."
+              },
+              "availability" : {
+                "type" : "string",
+                "description" : "The current availability status of the storage location (e.g., 'available')."
+              },
+              "images_url" : {
+                "type" : "string",
+                "description" : "The URL of an image representing the storage location (optional)."
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether insurance is included (e.g., true for yes, false for no)."
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was created (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "updated_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was last updated (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Eircode (Irish postcode) for the storage location."
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+              }
+            },
+            "required" : [ "availability", "description", "location", "owner_id", "price_per_month", "size", "storage_id", "storage_type", "title" ]
+          }
+        }
+      },
+      "title" : "ListStorageLocationAvailableDateRangeResponse",
+      "description" : "Response containing a list of storage locations available within a specified date range."
+    },
+    "UpdateReviewByIdResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the update operation."
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the response.",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "A more specific message about the update."
+            }
+          }
+        }
+      },
+      "title" : "UpdateReviewByIdResponse",
+      "description" : "Response confirming the successful update of a review."
+    },
+    "DeleteReviewByIdRequest" : {
+      "type" : "object",
+      "required" : [ "action", "review_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'delete_review')",
+          "enum" : [ "delete_review" ]
+        },
+        "review_id" : {
+          "type" : "string",
+          "description" : "The ID of the review to be deleted"
+        }
+      },
+      "title" : "DeleteReviewByIdRequest"
+    },
+    "Empty" : {
+      "type" : "object",
+      "title" : "Empty Schema"
+    },
+    "ListStorageLocationByOwnerIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Storage locations fetched successfully')."
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing information about each storage location owned by the user.",
+          "items" : {
+            "type" : "object",
+            "description" : "Details of an individual storage location.",
+            "properties" : {
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the storage location."
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who owns the storage location."
+              },
+              "title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage location."
+              },
+              "description" : {
+                "type" : "string",
+                "description" : "A description of the storage location."
+              },
+              "size" : {
+                "type" : "number",
+                "description" : "The size of the storage location (consider using a unit)."
+              },
+              "location" : {
+                "type" : "string",
+                "description" : "The general location of the storage location (e.g., '123 Main St, Dublin')."
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price for renting the storage location."
+              },
+              "availability" : {
+                "type" : "string",
+                "description" : "The current availability status of the storage location (e.g., 'available')."
+              },
+              "images_url" : {
+                "type" : "string",
+                "description" : "The URL of an image representing the storage location (optional)."
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether insurance is included (e.g., true for yes, false for no)."
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Eircode (Irish postcode) for the storage location."
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was created (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "updated_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was last updated (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The name of the owner of the storage location."
+              },
+              "owner_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the owner of the storage location."
+              }
+            },
+            "required" : [ "availability", "description", "location", "owner_id", "price_per_month", "size", "storage_id", "storage_type", "title" ]
+          }
+        }
+      },
+      "title" : "ListStorageLocationByOwnerIdResponse",
+      "description" : "Response containing a list of storage locations owned by a specific user identified by their ID."
+    },
+    "CreateReviewRequest" : {
+      "type" : "object",
+      "required" : [ "action", "comment", "rating", "storage_id", "user_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'create_review')",
+          "enum" : [ "create_review" ]
+        },
+        "storage_id" : {
+          "type" : "string",
+          "description" : "The ID of the storage unit being reviewed"
+        },
+        "user_id" : {
+          "type" : "string",
+          "description" : "The ID of the user creating the review"
+        },
+        "rating" : {
+          "type" : "string",
+          "description" : "The rating given by the user (e.g., '1', '2', '3', '4', '5')"
+        },
+        "comment" : {
+          "type" : "string",
+          "description" : "Any comments the user wants to add"
+        }
+      },
+      "title" : "CreateReviewRequest"
+    },
+    "UserCreationResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        }
+      },
+      "title" : "UserCreationResponse"
+    },
+    "DeleteRentalResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the deletion operation"
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the deletion",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "More specific message about the deletion (e.g., associated data)"
+            }
+          }
+        }
+      },
+      "title" : "DeleteRentalResponse"
+    },
+    "ListUsersResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Success message indicating users were fetched"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "Array containing user objects",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "user_id" : {
+                "type" : "string",
+                "description" : "Unique identifier for the user"
+              },
+              "name" : {
+                "type" : "string",
+                "description" : "User's full name"
+              },
+              "email" : {
+                "type" : "string",
+                "description" : "User's email address"
+              },
+              "phone" : {
+                "type" : "string",
+                "description" : "User's phone number in international format"
+              },
+              "profile_image_url" : {
+                "type" : "string",
+                "description" : "URL of the user's profile image"
+              },
+              "address" : {
+                "type" : "string",
+                "description" : "User's full address"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "User's Irish Eircode (postal code)"
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Date and time the user was created"
+              },
+              "updated_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Date and time the user was last updated"
+              },
+              "role_name" : {
+                "type" : "string",
+                "description" : "User's role in the system"
+              }
+            },
+            "required" : [ "created_at", "email", "role_name", "updated_at", "user_id" ]
+          }
+        }
+      },
+      "title" : "ListUsersResponse"
+    },
+    "RemoveUserResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        }
+      },
+      "title" : "RemoveUserResponse"
+    },
+    "DeleteStorageLocationResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the deletion operation (e.g., 'Storage location deleted successfully')."
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the response (optional).",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "A more specific message about the deletion (e.g., 'Storage location deleted successfully.')."
+            }
+          }
+        }
+      },
+      "title" : "DeleteStorageLocationResponse",
+      "description" : "Response confirming the successful deletion of a storage location."
+    },
+    "ListReviewsResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation (e.g., 'Reviews fetched successfully')"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each review",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "review_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the review"
+              },
+              "rating" : {
+                "type" : "integer",
+                "description" : "The rating given by the user (e.g., 1, 2, 3, 4, 5)"
+              },
+              "comment" : {
+                "type" : "string",
+                "description" : "The comment left by the reviewer (optional)"
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the review was created (YYYY-MM-DDTHH:MM:SS.sssZ)"
+              },
+              "reviewer_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who created the review"
+              },
+              "reviewer_name" : {
+                "type" : "string",
+                "description" : "The full name of the reviewer"
+              },
+              "reviewer_email" : {
+                "type" : "string",
+                "description" : "The email address of the reviewer"
+              },
+              "reviewer_profile_image" : {
+                "type" : "string",
+                "description" : "The URL of the reviewer's profile image (optional)"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being reviewed"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the owner of the storage unit"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The full name of the storage unit owner"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The email address of the storage unit owner"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "average_rating" : {
+                "type" : "number",
+                "description" : "The average rating for this storage unit (may not be present if there are no reviews)"
+              }
+            },
+            "required" : [ "created_at", "owner_email", "owner_id", "owner_name", "rating", "review_id", "reviewer_email", "reviewer_id", "reviewer_name", "storage_description", "storage_id", "storage_title" ]
+          }
+        }
+      },
+      "title" : "ListReviewsResponse"
+    },
+    "ListRentalByRentalIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of the rental",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "rental_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the rental"
+              },
+              "start_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The start date of the rental period (YYYY-MM-DD)"
+              },
+              "end_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The end date of the rental period (YYYY-MM-DD)"
+              },
+              "total_price" : {
+                "type" : "number",
+                "description" : "The total price of the rental"
+              },
+              "payment_status" : {
+                "type" : "string",
+                "description" : "The payment status of the rental (e.g., 'paid', 'pending', 'failed')"
+              },
+              "renter_id" : {
+                "type" : "string",
+                "description" : "The ID of the renter"
+              },
+              "renter_name" : {
+                "type" : "string",
+                "description" : "The renter's full name"
+              },
+              "renter_email" : {
+                "type" : "string",
+                "description" : "The renter's email address"
+              },
+              "renter_phone" : {
+                "type" : "string",
+                "description" : "The renter's phone number"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the storage unit owner"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The owner's full name"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The owner's email address"
+              },
+              "owner_phone" : {
+                "type" : "string",
+                "description" : "The owner's phone number"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being rented"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "storage_size" : {
+                "type" : "number",
+                "description" : "The size of the storage unit"
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The address of the storage unit"
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price of the storage unit"
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether the rental includes optional insurance"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Irish Eircode (postal code) for the storage unit"
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage unit (e.g., 'Roof', 'Basement', 'Garage')"
+              }
+            },
+            "required" : [ "end_date", "insurance_option", "owner_id", "payment_status", "price_per_month", "rental_id", "renter_id", "start_date", "storage_id", "storage_title", "storage_type", "total_price" ]
+          }
+        }
+      },
+      "title" : "ListRentalByRentalIdResponse"
+    },
+    "CreateRentalRequest" : {
+      "type" : "object",
+      "required" : [ "action", "end_date", "payment_status", "renter_id", "start_date", "storage_id", "total_price" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'create_rental')",
+          "enum" : [ "create_rental" ]
+        },
+        "storage_id" : {
+          "type" : "string",
+          "description" : "The ID of the storage unit being rented"
+        },
+        "start_date" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "The start date of the rental period (YYYY-MM-DD)"
+        },
+        "end_date" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "The end date of the rental period (YYYY-MM-DD)"
+        },
+        "renter_id" : {
+          "type" : "string",
+          "description" : "The ID of the renter"
+        },
+        "total_price" : {
+          "type" : "string",
+          "description" : "The total price of the rental"
+        },
+        "payment_status" : {
+          "type" : "string",
+          "description" : "The payment status of the rental"
+        }
+      },
+      "title" : "CreateRentalRequest"
+    },
+    "ListReviewByReviewIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of the requested review",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "review_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the review"
+              },
+              "rating" : {
+                "type" : "integer",
+                "description" : "The rating given by the user (e.g., 1, 2, 3, 4, 5)"
+              },
+              "comment" : {
+                "type" : "string",
+                "description" : "The comment left by the reviewer (optional)"
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the review was created (YYYY-MM-DDTHH:MM:SS.sssZ)"
+              },
+              "reviewer_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who created the review"
+              },
+              "reviewer_name" : {
+                "type" : "string",
+                "description" : "The full name of the reviewer"
+              },
+              "reviewer_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the reviewer"
+              },
+              "reviewer_profile_image" : {
+                "type" : "string",
+                "format" : "url",
+                "description" : "The URL of the reviewer's profile image (optional)"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being reviewed"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the owner of the storage unit"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The full name of the storage unit owner"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the storage unit owner"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "average_rating" : {
+                "type" : "number",
+                "description" : "The average rating for this storage unit (may not be present if there are no reviews)"
+              }
+            },
+            "required" : [ "created_at", "owner_email", "owner_id", "owner_name", "rating", "review_id", "reviewer_email", "reviewer_id", "reviewer_name", "storage_description", "storage_id", "storage_title" ]
+          }
+        }
+      },
+      "title" : "ListReviewByReviewIdResponse",
+      "description" : "Response containing details of a single review identified by its ID."
+    },
+    "UpdateStorageLocationRequest" : {
+      "type" : "object",
+      "required" : [ "action", "storage_id", "update_data" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action being performed (update_storage_location).",
+          "enum" : [ "update_storage_location" ]
+        },
+        "storage_id" : {
+          "type" : "string",
+          "description" : "The ID of the storage location to be updated."
+        },
+        "update_data" : {
+          "type" : "object",
+          "description" : "An object containing the updated information for the storage location.",
+          "properties" : {
+            "title" : {
+              "type" : "string",
+              "description" : "The updated title or name of the storage location."
+            },
+            "description" : {
+              "type" : "string",
+              "description" : "The updated description of the storage location."
+            },
+            "storage_type" : {
+              "type" : "string",
+              "description" : "The updated type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+            },
+            "availability" : {
+              "type" : "string",
+              "description" : "The updated availability status of the storage location (e.g., 'available')."
+            },
+            "size" : {
+              "type" : "string",
+              "description" : "The updated size of the storage location (consider using a number type)."
+            },
+            "price_per_month" : {
+              "type" : "string",
+              "description" : "The updated monthly price for renting the storage location (consider using a number type)."
+            },
+            "images_url" : {
+              "type" : "string",
+              "description" : "The updated URL of an image representing the storage location."
+            },
+            "insurance_option" : {
+              "type" : "string",
+              "description" : "The updated insurance option (consider using a boolean type)."
+            }
+          }
+        }
+      },
+      "title" : "UpdateStorageLocationRequest",
+      "description" : "Request to update details of an existing storage location."
+    },
+    "UserUpdateRequest" : {
+      "type" : "object",
+      "required" : [ "action", "data" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'update_profile')",
+          "enum" : [ "update_profile" ]
+        },
+        "data" : {
+          "type" : "object",
+          "properties" : {
+            "user_id" : {
+              "type" : "string",
+              "description" : "The unique identifier for the user (e.g., firebase_uid)"
+            },
+            "profile_data" : {
+              "type" : "object",
+              "description" : "Data containing user's update information",
+              "properties" : {
+                "email" : {
+                  "type" : "string",
+                  "format" : "email",
+                  "description" : "Updated email address (Optional)"
+                },
+                "role_name" : {
+                  "type" : "string",
+                  "description" : "Updated role name (Optional)",
+                  "enum" : [ "admin", "user" ]
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "Updated user's full name (Optional)"
+                },
+                "profile_image_url" : {
+                  "type" : "string",
+                  "description" : "Updated URL of the user's profile image (Optional)"
+                },
+                "address" : {
+                  "type" : "string",
+                  "description" : "Updated user's full address (Optional)"
+                },
+                "eircode" : {
+                  "type" : "string",
+                  "description" : "Updated user's Irish Eircode (postal code) (Optional)"
+                }
+              }
+            }
+          },
+          "required" : [ "profile_data", "user_id" ]
+        }
+      },
+      "title" : "UserUpdateRequest"
+    },
+    "AddStorageLocationRequest" : {
+      "type" : "object",
+      "required" : [ "action", "description", "location", "price_per_month", "size", "storage_type", "title", "user_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'add_storage_location').",
+          "enum" : [ "add_storage_location" ]
+        },
+        "user_id" : {
+          "type" : "string",
+          "description" : "The ID of the user creating the storage location."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "The title or name of the storage location."
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "A description of the storage location."
+        },
+        "storage_type" : {
+          "type" : "string",
+          "description" : "The type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+        },
+        "size" : {
+          "type" : "string",
+          "description" : "The size of the storage location (consider using a number)."
+        },
+        "location" : {
+          "type" : "string",
+          "description" : "The general location of the storage (e.g., 'Dublin City Centre')."
+        },
+        "eircode" : {
+          "type" : "string",
+          "description" : "The Eircode (Irish postcode) for the storage location (optional)."
+        },
+        "price_per_month" : {
+          "type" : "string",
+          "description" : "The monthly price for renting the storage location (consider using a number)."
+        },
+        "images_url" : {
+          "type" : "string",
+          "description" : "The URL of an image representing the storage location (optional)."
+        },
+        "insurance_option" : {
+          "type" : "string",
+          "description" : "Whether insurance is included (e.g., '0' for no, '1' for yes) (consider using a boolean)."
+        }
+      },
+      "title" : "AddStorageLocationRequest",
+      "description" : "Request body for adding a new storage location."
+    },
+    "CreateReviewResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Additional details about the response",
+          "properties" : {
+            "message" : {
+              "type" : "string",
+              "description" : "More specific message about the creation"
+            }
+          }
+        }
+      },
+      "title" : "CreateReviewResponse"
+    },
+    "UserRoleUpdateResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        }
+      },
+      "title" : "UserRoleUpdateResponse"
+    },
+    "ListReviewsByOwnerIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each review",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "review_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the review"
+              },
+              "rating" : {
+                "type" : "integer",
+                "description" : "The rating given by the user (e.g., 1, 2, 3, 4, 5)"
+              },
+              "comment" : {
+                "type" : "string",
+                "description" : "The comment left by the reviewer (optional)"
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the review was created (YYYY-MM-DDTHH:MM:SS.sssZ)"
+              },
+              "reviewer_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who created the review"
+              },
+              "reviewer_name" : {
+                "type" : "string",
+                "description" : "The full name of the reviewer"
+              },
+              "reviewer_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the reviewer"
+              },
+              "reviewer_profile_image" : {
+                "type" : "string",
+                "format" : "url",
+                "description" : "The URL of the reviewer's profile image (optional)"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being reviewed"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the owner of the storage unit"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The full name of the storage unit owner"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the storage unit owner"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "average_rating" : {
+                "type" : "number",
+                "description" : "The average rating for this storage unit (may not be present if there are no reviews)"
+              },
+              "row_num" : {
+                "type" : "integer",
+                "description" : "The row number of the review in the result set (might be specific to the backend implementation)"
+              }
+            },
+            "required" : [ "created_at", "owner_email", "owner_id", "owner_name", "rating", "review_id", "reviewer_email", "reviewer_id", "reviewer_name", "storage_description", "storage_id", "storage_title" ]
+          }
+        }
+      },
+      "title" : "ListReviewsByOwnerIdResponse",
+      "description" : "Response containing a list of reviews for a storage unit owner identified by their ID."
+    },
+    "UserUpdateResponse" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        }
+      },
+      "title" : "UserUpdateResponse"
+    },
+    "UserRoleUpdateRequest" : {
+      "type" : "object",
+      "required" : [ "action", "data" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'update_user_role')",
+          "enum" : [ "update_user_role" ]
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Data containing user information",
+          "properties" : {
+            "user_email_id" : {
+              "type" : "string",
+              "format" : "email",
+              "description" : "The user's email address for identification"
+            }
+          },
+          "required" : [ "user_email_id" ]
+        }
+      },
+      "title" : "UserRoleUpdateRequest"
+    },
+    "UpdateReviewByIdRequest" : {
+      "type" : "object",
+      "required" : [ "action", "review_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'update_review').",
+          "enum" : [ "update_review" ]
+        },
+        "review_id" : {
+          "type" : "string",
+          "description" : "The ID of the review to be updated."
+        },
+        "rating" : {
+          "type" : "string",
+          "description" : "The updated rating given by the user (e.g., '1', '2', '3', '4', '5')."
+        },
+        "comment" : {
+          "type" : "string",
+          "description" : "The updated comment provided by the user."
+        }
+      },
+      "title" : "UpdateReviewByIdRequest",
+      "description" : "Request body for updating a review by its ID."
+    },
+    "CheckAvailabilityDateStorageIdResponse" : {
+      "title" : "CheckAvailabilityDateStorageIdResponse",
+      "description" : "Response indicating storage availability and pricing. There are two possible response structures."
+    },
+    "DeleteStorageLocationRequest" : {
+      "type" : "object",
+      "required" : [ "action", "storage_id" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'delete_storage_location').",
+          "enum" : [ "delete_storage_location" ]
+        },
+        "storage_id" : {
+          "type" : "string",
+          "description" : "The ID of the storage location to be deleted."
+        }
+      },
+      "title" : "DeleteStorageLocationRequest",
+      "description" : "Request body for deleting a storage location."
+    },
+    "ListAllRentalsResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each rental",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "rental_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the rental"
+              },
+              "start_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The start date of the rental period (YYYY-MM-DD)"
+              },
+              "end_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The end date of the rental period (YYYY-MM-DD)"
+              },
+              "total_price" : {
+                "type" : "number",
+                "description" : "The total price of the rental"
+              },
+              "payment_status" : {
+                "type" : "string",
+                "description" : "The payment status of the rental (e.g., 'paid', 'pending', 'failed')"
+              },
+              "renter_id" : {
+                "type" : "string",
+                "description" : "The ID of the renter"
+              },
+              "renter_name" : {
+                "type" : "string",
+                "description" : "The renter's full name"
+              },
+              "renter_email" : {
+                "type" : "string",
+                "description" : "The renter's email address"
+              },
+              "renter_phone" : {
+                "type" : "string",
+                "description" : "The renter's phone number"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the storage unit owner"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The owner's full name"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The owner's email address"
+              },
+              "owner_phone" : {
+                "type" : "string",
+                "description" : "The owner's phone number"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being rented"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "storage_size" : {
+                "type" : "number",
+                "description" : "The size of the storage unit"
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The address of the storage unit"
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price of the storage unit"
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether the rental includes optional insurance"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Irish Eircode (postal code) for the storage unit"
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage unit (e.g., 'Roof', 'Basement', 'Garage')"
+              }
+            },
+            "required" : [ "end_date", "insurance_option", "owner_id", "payment_status", "price_per_month", "rental_id", "renter_id", "start_date", "storage_id", "storage_title", "storage_type", "total_price" ]
+          }
+        }
+      },
+      "title" : "ListAllRentalsResponse"
+    },
+    "GetUserResponse" : {
+      "type" : "object",
+      "required" : [ "created_at", "email", "role_name", "updated_at", "user_id" ],
+      "properties" : {
+        "user_id" : {
+          "type" : "string",
+          "description" : "The unique identifier for the user"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "User's full name"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "User's email address"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "User's phone number in international format"
+        },
+        "profile_image_url" : {
+          "type" : "string",
+          "description" : "URL of the user's profile image"
+        },
+        "address" : {
+          "type" : "string",
+          "description" : "User's full address"
+        },
+        "eircode" : {
+          "type" : "string",
+          "description" : "User's Irish Eircode (postal code)"
+        },
+        "created_at" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Date and time the user was created"
+        },
+        "updated_at" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Date and time the user was last updated"
+        },
+        "role_name" : {
+          "type" : "string",
+          "description" : "User's role in the system"
+        }
+      },
+      "title" : "GetUserResponse"
+    },
+    "ListRentalByOwnerIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each rental",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "rental_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the rental"
+              },
+              "start_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The start date of the rental period (YYYY-MM-DD)"
+              },
+              "end_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The end date of the rental period (YYYY-MM-DD)"
+              },
+              "total_price" : {
+                "type" : "number",
+                "description" : "The total price of the rental"
+              },
+              "payment_status" : {
+                "type" : "string",
+                "description" : "The payment status of the rental (e.g., 'paid', 'pending', 'failed')"
+              },
+              "renter_id" : {
+                "type" : "string",
+                "description" : "The ID of the renter"
+              },
+              "renter_name" : {
+                "type" : "string",
+                "description" : "The renter's full name"
+              },
+              "renter_email" : {
+                "type" : "string",
+                "description" : "The renter's email address"
+              },
+              "renter_phone" : {
+                "type" : "string",
+                "description" : "The renter's phone number"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the storage unit owner"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The owner's full name"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The owner's email address"
+              },
+              "owner_phone" : {
+                "type" : "string",
+                "description" : "The owner's phone number"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being rented"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "storage_size" : {
+                "type" : "number",
+                "description" : "The size of the storage unit"
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The address of the storage unit"
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price of the storage unit"
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether the rental includes optional insurance"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Irish Eircode (postal code) for the storage unit"
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage unit (e.g., 'Roof', 'Basement', 'Garage')"
+              }
+            },
+            "required" : [ "end_date", "insurance_option", "owner_id", "payment_status", "price_per_month", "rental_id", "renter_id", "start_date", "storage_id", "storage_title", "storage_type", "total_price" ]
+          }
+        }
+      },
+      "title" : "ListRentalByOwnerIdResponse"
+    },
+    "ListRentalByRenterIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each rental",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "rental_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the rental"
+              },
+              "start_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The start date of the rental period (YYYY-MM-DD)"
+              },
+              "end_date" : {
+                "type" : "string",
+                "format" : "date",
+                "description" : "The end date of the rental period (YYYY-MM-DD)"
+              },
+              "total_price" : {
+                "type" : "number",
+                "description" : "The total price of the rental"
+              },
+              "payment_status" : {
+                "type" : "string",
+                "description" : "The payment status of the rental (e.g., 'paid', 'pending', 'failed')"
+              },
+              "renter_id" : {
+                "type" : "string",
+                "description" : "The ID of the renter"
+              },
+              "renter_name" : {
+                "type" : "string",
+                "description" : "The renter's full name"
+              },
+              "renter_email" : {
+                "type" : "string",
+                "description" : "The renter's email address"
+              },
+              "renter_phone" : {
+                "type" : "string",
+                "description" : "The renter's phone number"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the storage unit owner"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The owner's full name"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "description" : "The owner's email address"
+              },
+              "owner_phone" : {
+                "type" : "string",
+                "description" : "The owner's phone number"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being rented"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "storage_size" : {
+                "type" : "number",
+                "description" : "The size of the storage unit"
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The address of the storage unit"
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price of the storage unit"
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether the rental includes optional insurance"
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Irish Eircode (postal code) for the storage unit"
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage unit (e.g., 'Roof', 'Basement', 'Garage')"
+              }
+            },
+            "required" : [ "end_date", "insurance_option", "owner_id", "payment_status", "price_per_month", "rental_id", "renter_id", "start_date", "storage_id", "storage_title", "storage_type", "total_price" ]
+          }
+        }
+      },
+      "title" : "ListRentalByRenterIdResponse"
+    },
+    "ListStorageLocationResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Storage locations fetched successfully')."
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing information about each storage location.",
+          "items" : {
+            "type" : "object",
+            "description" : "Details of an individual storage location.",
+            "properties" : {
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the storage location."
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who owns the storage location."
+              },
+              "title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage location."
+              },
+              "description" : {
+                "type" : "string",
+                "description" : "A description of the storage location."
+              },
+              "size" : {
+                "type" : "number",
+                "description" : "The size of the storage location (consider using a unit)."
+              },
+              "location" : {
+                "type" : "string",
+                "description" : "The general location of the storage location (e.g., '123 Main St, Dublin')."
+              },
+              "price_per_month" : {
+                "type" : "number",
+                "description" : "The monthly price for renting the storage location."
+              },
+              "availability" : {
+                "type" : "string",
+                "description" : "The current availability status of the storage location (e.g., 'available')."
+              },
+              "images_url" : {
+                "type" : "string",
+                "description" : "The URL of an image representing the storage location (optional)."
+              },
+              "insurance_option" : {
+                "type" : "boolean",
+                "description" : "Whether insurance is included (e.g., true for yes, false for no)."
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was created (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "updated_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the storage location was last updated (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "eircode" : {
+                "type" : "string",
+                "description" : "The Eircode (Irish postcode) for the storage location."
+              },
+              "storage_type" : {
+                "type" : "string",
+                "description" : "The type of storage (e.g., 'Roof', 'Basement', 'Garage')."
+              }
+            },
+            "required" : [ "availability", "description", "location", "owner_id", "price_per_month", "size", "storage_id", "storage_type", "title" ]
+          }
+        }
+      },
+      "title" : "ListStorageLocationResponse",
+      "description" : "Response containing a list of storage locations."
+    },
+    "ListReviewsByStorageIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "Message indicating the result of the operation"
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing details of each review for the storage unit",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "review_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the review"
+              },
+              "rating" : {
+                "type" : "integer",
+                "description" : "The rating given by the user (e.g., 1, 2, 3, 4, 5)"
+              },
+              "comment" : {
+                "type" : "string",
+                "description" : "The comment left by the reviewer (optional)"
+              },
+              "created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the review was created (YYYY-MM-DDTHH:MM:SS.sssZ)"
+              },
+              "reviewer_id" : {
+                "type" : "string",
+                "description" : "The ID of the user who created the review"
+              },
+              "reviewer_name" : {
+                "type" : "string",
+                "description" : "The full name of the reviewer"
+              },
+              "reviewer_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the reviewer"
+              },
+              "reviewer_profile_image" : {
+                "type" : "string",
+                "format" : "url",
+                "description" : "The URL of the reviewer's profile image (optional)"
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage unit being reviewed"
+              },
+              "owner_id" : {
+                "type" : "string",
+                "description" : "The ID of the owner of the storage unit"
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The full name of the storage unit owner"
+              },
+              "owner_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the storage unit owner"
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title or name of the storage unit"
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage unit"
+              },
+              "average_rating" : {
+                "type" : "number",
+                "description" : "The average rating for this storage unit (may not be present if there are no reviews)"
+              },
+              "row_num" : {
+                "type" : "integer",
+                "description" : "The row number of the review in the result set (might be specific to the backend implementation)"
+              }
+            },
+            "required" : [ "created_at", "owner_email", "owner_id", "owner_name", "rating", "review_id", "reviewer_email", "reviewer_id", "reviewer_name", "storage_description", "storage_id", "storage_title" ]
+          }
+        }
+      },
+      "title" : "ListReviewsByStorageIdResponse",
+      "description" : "Response containing a list of reviews for a storage unit identified by its ID."
+    },
+    "UserCreationRequest" : {
+      "type" : "object",
+      "required" : [ "action", "data" ],
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "description" : "The action to perform (should be 'create_account')",
+          "enum" : [ "create_account" ]
+        },
+        "data" : {
+          "type" : "object",
+          "description" : "Data containing user information",
+          "properties" : {
+            "user_id" : {
+              "type" : "string",
+              "description" : "The unique identifier for the user (e.g., firebase_uid)"
+            },
+            "email" : {
+              "type" : "string",
+              "format" : "email",
+              "description" : "The user's email address (unique)"
+            },
+            "role_name" : {
+              "type" : "string",
+              "description" : "The user's role in the system (admin or user)",
+              "enum" : [ "admin", "user" ]
+            }
+          },
+          "required" : [ "email", "role_name", "user_id" ]
+        }
+      },
+      "title" : "UserCreationRequest"
+    }
+  }
+}

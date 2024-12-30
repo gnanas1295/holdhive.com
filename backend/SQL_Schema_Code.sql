@@ -15,11 +15,11 @@ CREATE TABLE Users (
     profile_image_url TEXT,
     role_id INT NOT NULL, -- FK to Roles table
     address TEXT,
+	eircode VARCHAR(20),
     created_at DATETIME DEFAULT GETDATE(),
     updated_at DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (role_id) REFERENCES Roles(role_id)
 );
-
 
 -- StorageSpaces Table
 CREATE TABLE StorageSpaces (
@@ -27,8 +27,10 @@ CREATE TABLE StorageSpaces (
     owner_id VARCHAR(255) NOT NULL, -- FK to Users.user_id
     title VARCHAR(150) NOT NULL,
     description TEXT,
+	storage_type VARCHAR(30),
     size DECIMAL(10, 2), -- Size in square meters
     location TEXT NOT NULL, -- Address or coordinates
+	eircode VARCHAR(20),
     price_per_month DECIMAL(10, 2) NOT NULL,
     availability VARCHAR(20) CHECK (availability IN ('available', 'rented')) DEFAULT 'available',
     images_url NVARCHAR(MAX), -- Array of image URLs
@@ -37,6 +39,13 @@ CREATE TABLE StorageSpaces (
     updated_at DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (owner_id) REFERENCES Users(user_id)
 );
+
+
+ALTER TABLE StorageSpaces
+ADD eircode VARCHAR(20), -- Add a column for eircode
+    storage_type VARCHAR(30); -- Add a column for storage type
+
+
 
 --Rentals Table
 CREATE TABLE Rentals (
@@ -109,20 +118,24 @@ CREATE TABLE StorageSpaceFeatures (
 INSERT INTO Roles (role_name, description) VALUES 
 ('admin', 'Admin with full access to manage all data'),
 ('owner', 'User who owns the storage space'),
-('renter', 'User who rents the storage space');
+('renter', 'User who rents the storage space'),
+('user', 'User with access to Rent and Owns the place');
 
 select * from Roles;
 
 --Users Table
-INSERT INTO Users (user_id, name, email, phone, profile_image_url, role_id, address, created_at, updated_at) VALUES
-('user1', 'John Doe', 'john.doe@example.com', '123-456-7890', 'http://example.com/profile1.jpg', 1002, '123 Main St, Dublin', GETDATE(), GETDATE()),
-('user2', 'Jane Smith', 'jane.smith@example.com', '098-765-4321', 'http://example.com/profile2.jpg', 1003, '456 Oak St, Cork', GETDATE(), GETDATE()),
-('user3', 'Alice Brown', 'alice.brown@example.com', '123-321-4321', 'http://example.com/profile3.jpg', 1003, '789 Pine St, Galway', GETDATE(), GETDATE()),
-('user4', 'Bob White', 'bob.white@example.com', '987-654-3210', 'http://example.com/profile4.jpg', 1001, '101 Maple St, Limerick', GETDATE(), GETDATE()),
-('user5', 'Charlie Green', 'charlie.green@example.com', '654-987-3210', 'http://example.com/profile5.jpg', 1003, '202 Birch St, Kilkenny', GETDATE(), GETDATE());
+INSERT INTO Users (user_id, name, email, phone, profile_image_url, role_id, address, eircode, created_at, updated_at) VALUES
+('user1', 'John Doe', 'john.doe@example.com', '123-456-7890', 'http://example.com/profile1.jpg', 1002, '123 Main St, Dublin', ‘D01F1P2’, GETDATE(), GETDATE()),
+('user2', 'Jane Smith', 'jane.smith@example.com', '098-765-4321', 'http://example.com/profile2.jpg', 1003, '456 Oak St, Cork', ‘D01F1P2’, GETDATE(), GETDATE()),
+('user3', 'Alice Brown', 'alice.brown@example.com', '123-321-4321', 'http://example.com/profile3.jpg', 1003, '789 Pine St, Galway', ‘D01F1P2’, GETDATE(), GETDATE()),
+('user4', 'Bob White', 'bob.white@example.com', '987-654-3210', 'http://example.com/profile4.jpg', 1001, '101 Maple St, Limerick', ‘D01F1P2’, GETDATE(), GETDATE()),
+('user5', 'Charlie Green', 'charlie.green@example.com', '654-987-3210', 'http://example.com/profile5.jpg', 1003, '202 Birch St, Kilkenny',‘D01F1P2’,  GETDATE(), GETDATE());
 
 select * from Users;
 
+UPDATE Users SET role_id = 1001 WHERE user_id = 'r3u1PjtEUcXfkHYs8p6ITHUN7wn2';
+
+Delete from Users where name = 'Mrudula Didde';
 
 --Storage Table
 INSERT INTO StorageSpaces (owner_id, title, description, size, location, price_per_month, availability, images_url, insurance_option, created_at, updated_at) VALUES
@@ -133,6 +146,12 @@ INSERT INTO StorageSpaces (owner_id, title, description, size, location, price_p
 ('user5', 'Large Shed in Kilkenny', 'Outdoor storage with enough space for gardening equipment and tools.', 20.0, '202 Birch St, Kilkenny', 120.00, 'available', '["http://example.com/shed1.jpg"]', 0, GETDATE(), GETDATE());
 
 select * from storagespaces;
+
+Update storagespaces SET eircode = 'D02 X285' where storage_id = '10001';
+Update storagespaces SET eircode = 'T12 A8RP' where storage_id = '10002';
+Update storagespaces SET eircode = 'V94 FKT9' where storage_id = '10003';
+Update storagespaces SET eircode = 'H91 A4CC' where storage_id = '10004';
+Update storagespaces SET eircode = 'X91 YK0F' where storage_id = '10005';
 
 --Rentals Table
 INSERT INTO Rentals (storage_id, renter_id, start_date, end_date, total_price, payment_status, created_at, updated_at) VALUES
