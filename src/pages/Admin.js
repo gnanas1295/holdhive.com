@@ -2,19 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
-import { Container, Row, Col, Form, Button, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, ListGroup, Alert, Spinner } from 'react-bootstrap';
 
 const Admin = () => {
   const [user, loading] = useAuthState(auth); // Check Firebase auth state
   const navigate = useNavigate();
 
-  const [storageUnits, setStorageUnits] = useState([
-    { id: 1, title: 'Storage A', description: 'Affordable unit', price: 50, location: 'City A' },
-    { id: 2, title: 'Storage B', description: 'Spacious unit', price: 75, location: 'City B' },
-    { id: 3, title: 'Storage C', description: 'Secure unit', price: 100, location: 'City C' },
-  ]);
-
-  const [form, setForm] = useState({ id: null, title: '', description: '', price: '', location: '' });
+  const [storageUnits, setStorageUnits] = useState([]);
+  const [form, setForm] = useState({
+    id: null,
+    title: '',
+    description: '',
+    price_per_month: '',
+    location: '',
+    eircode: '',
+    storage_type: '',
+    size: '',
+    images_url: '',
+    insurance_option: false,
+  });
+  const [loadingAction, setLoadingAction] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -23,42 +32,156 @@ const Admin = () => {
     }
   }, [user, loading, navigate]);
 
+  // Fetch all storage units (simulating fetching from backend)
+  useEffect(() => {
+    const fetchStorageUnits = async () => {
+      const apiUrl = 'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/storage-location/list-storage-location';
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Failed to fetch storage units');
+
+        const data = await response.json();
+        setStorageUnits(data.data || []);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchStorageUnits();
+  }, []);
+
+  // Handle input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setForm({ ...form, [name]: type === 'checkbox' ? checked : value });
   };
 
-  const handleSubmit = (e) => {
+  // Handle add or update storage unit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.id) {
-      // Update existing storage unit
+    setLoadingAction(true);
+    setError('');
+    setSuccess('');
+
+    const apiUrl = form.id
+      ? 'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/storage-location/update-storage-location'
+      : 'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/storage-location/add-storage-location';
+
+    const requestBody = form.id
+      ? {
+          action: 'update_storage_location',
+          storage_id: form.id,
+          update_data: {
+            title: form.title,
+            description: form.description,
+            price_per_month: form.price_per_month,
+            location: form.location,
+            eircode: form.eircode,
+            storage_type: form.storage_type,
+            size: form.size,
+            images_url: form.images_url,
+            insurance_option: form.insurance_option ? '1' : '0',
+          },
+        }
+      : {
+          action: 'add_storage_location',
+          user_id: user.uid,
+          title: form.title,
+          description: form.description,
+          price_per_month: form.price_per_month,
+          location: form.location,
+          eircode: form.eircode,
+          storage_type: form.storage_type,
+          size: form.size,
+          images_url: form.images_url,
+          insurance_option: form.insurance_option ? '1' : '0',
+        };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) throw new Error('Failed to save storage unit');
+
+      const data = await response.json();
+      setSuccess(`Storage unit ${form.id ? 'updated' : 'added'} successfully!`);
       setStorageUnits((prev) =>
-        prev.map((unit) => (unit.id === form.id ? { ...unit, ...form } : unit))
+        form.id
+          ? prev.map((unit) =>
+              unit.storage_id === form.id ? { ...unit, ...requestBody.update_data } : unit
+            )
+          : [...prev, { ...requestBody, storage_id: data.storage_id }]
       );
-    } else {
-      // Add new storage unit
-      setStorageUnits((prev) => [
-        ...prev,
-        { ...form, id: Date.now(), price: parseFloat(form.price) },
-      ]);
+      setForm({
+        id: null,
+        title: '',
+        description: '',
+        price_per_month: '',
+        location: '',
+        eircode: '',
+        storage_type: '',
+        size: '',
+        images_url: '',
+        insurance_option: false,
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingAction(false);
     }
-    // Reset form
-    setForm({ id: null, title: '', description: '', price: '', location: '' });
+  };
+
+  // Handle delete storage unit
+  const handleDelete = async (id) => {
+    setLoadingAction(true);
+    setError('');
+    setSuccess('');
+
+    const apiUrl = 'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/storage-location/delete-storage-location';
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete_storage_location', storage_id: id }),
+      });
+
+      if (!response.ok) throw new Error('Failed to delete storage unit');
+
+      setSuccess('Storage unit deleted successfully!');
+      setStorageUnits((prev) => prev.filter((unit) => unit.storage_id !== id));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingAction(false);
+    }
   };
 
   const handleEdit = (unit) => {
-    setForm(unit);
-  };
-
-  const handleDelete = (id) => {
-    setStorageUnits((prev) => prev.filter((unit) => unit.id !== id));
+    setForm({
+      id: unit.storage_id,
+      title: unit.title,
+      description: unit.description,
+      price_per_month: unit.price_per_month,
+      location: unit.location,
+      eircode: unit.eircode,
+      storage_type: unit.storage_type,
+      size: unit.size,
+      images_url: unit.images_url,
+      insurance_option: unit.insurance_option === '1',
+    });
   };
 
   if (loading) return <div className="text-center my-5">Loading...</div>;
 
   return (
     <Container className="my-5">
-      <h1 className="text-center mb-5">Admin Panel</h1>
+      {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
       <Row>
         {/* Form Section */}
         <Col md={6}>
@@ -91,8 +214,8 @@ const Admin = () => {
                   <Form.Label>Price</Form.Label>
                   <Form.Control
                     type="number"
-                    name="price"
-                    value={form.price}
+                    name="price_per_month"
+                    value={form.price_per_month}
                     onChange={handleChange}
                     required
                   />
@@ -107,8 +230,54 @@ const Admin = () => {
                     required
                   />
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100">
-                  {form.id ? 'Update Storage' : 'Add Storage'}
+                {/* Other fields */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Storage Type</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="storage_type"
+                    value={form.storage_type}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Eircode</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="eircode"
+                    value={form.eircode}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Image URL</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="images_url"
+                    value={form.images_url}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    name="insurance_option"
+                    label="Insurance Option"
+                    checked={form.insurance_option}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Size</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="size"
+                    value={form.size}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Button type="submit" variant="primary" className="w-100" disabled={loadingAction}>
+                  {loadingAction ? <Spinner animation="border" size="sm" /> : form.id ? 'Update Storage' : 'Add Storage'}
                 </Button>
               </Form>
             </Card.Body>
@@ -126,15 +295,15 @@ const Admin = () => {
                 <ListGroup>
                   {storageUnits.map((unit) => (
                     <ListGroup.Item
-                      key={unit.id}
+                      key={unit.storage_id}
                       className="d-flex justify-content-between align-items-start"
                     >
                       <div>
                         <h5 className="mb-1">{unit.title}</h5>
                         <p className="mb-1">{unit.description}</p>
                         <small>
-                          <strong>Price:</strong> ${unit.price} | <strong>Location:</strong>{' '}
-                          {unit.location}
+                          <strong>Price:</strong> €{unit.price_per_month} |{' '}
+                          <strong>Location:</strong> {unit.location}
                         </small>
                       </div>
                       <div>
@@ -149,7 +318,7 @@ const Admin = () => {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => handleDelete(unit.id)}
+                          onClick={() => handleDelete(unit.storage_id)}
                         >
                           Delete
                         </Button>

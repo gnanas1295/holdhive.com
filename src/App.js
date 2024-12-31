@@ -9,9 +9,15 @@ import AuthForm from './components/AuthForm';
 import PrivateRoute from './components/PrivateRoute';
 import Listings from './pages/Listings';
 import Booking from './pages/Booking';
+import ProfileEdit from './pages/Profile';
+import AllRentals from './pages/AllRentals';
+import RentalsByRenter from './pages/RentalListings.js';
+import RentalDetails from './pages/RentalDetails';
+import StorageListings from './pages/StorageListings.js';
+import AllStorages from './pages/AllStorages.js';
+import NotFound from './pages/NotFound';
 
 const App = () => {
-  // Get the login state from Firebase or localStorage
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
   return (
@@ -23,27 +29,83 @@ const App = () => {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/listings" element={<Listings />} />
-            <Route path="/booking" element={<Booking />} />
-
+            <Route path="/storage/:id" element={<Listings />} />
+            <Route path="/storages/all" element={<AllStorages />} />
             {/* Authentication Route */}
             <Route
               path="/auth"
-              element={isLoggedIn ? <Navigate to="/admin" replace /> : <AuthForm />}
+              element={isLoggedIn ? <Navigate to="/profile" replace /> : <AuthForm />}
             />
 
-            {/* Protected Route */}
+            {/* Admin-Only Route */}
             <Route
-              path="/admin"
+              path="/rentals/all"
               element={
-                <PrivateRoute>
-                  <Admin />
+                <PrivateRoute allowedRoles={['admin']}>
+                  <AllRentals />
                 </PrivateRoute>
               }
             />
 
+            {/* Shared Protected Routes (Admin and User) */}
+            <Route
+              path="/booking"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <Booking />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <Admin />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfileEdit />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/listings/renter"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <RentalsByRenter />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/rentals/listings"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <RentalsByRenter />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/rentals/details/:rentalId"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <RentalDetails />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/storage/listings"
+              element={
+                <PrivateRoute allowedRoles={['admin', 'user']}>
+                  <StorageListings />
+                </PrivateRoute>
+              }
+            />
             {/* Catch-All Route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
         <Footer />

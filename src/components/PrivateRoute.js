@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { AuthContext } from '../context/AuthContext';
 
-const PrivateRoute = ({ children }) => {
-  const [user, loading] = useAuthState(auth);
+const PrivateRoute = ({ children, allowedRoles }) => {
+  const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    // Show a loading spinner or placeholder while the auth state is loading
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // Show a spinner while user state is loading
   }
 
-  return user ? children : <Navigate to="/auth" replace />;
+  if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return children;
 };
 
 export default PrivateRoute;

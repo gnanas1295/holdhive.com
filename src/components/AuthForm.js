@@ -3,6 +3,8 @@ import { auth } from '../firebase';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
@@ -12,26 +14,92 @@ const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleApiCall = async (firebaseUid, email) => {
+    const apiUrl = 'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/profile/user-creation';
+    const requestBody = {
+      action: 'create_account',
+      data: {
+        user_id: firebaseUid,
+        email
+      },
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user in the database.');
+      }
+
+      const data = await response.json();
+      console.log('User created in DB:', data);
+    } catch (err) {
+      console.error('API Error:', err.message);
+      throw new Error('Failed to create user in the database.');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        // Firebase Sign-Up
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const firebaseUid = userCredential.user.uid;
+
+        // Call the external API
+        await handleApiCall(firebaseUid, email);
+
         alert('Account created successfully!');
       } else {
+        // Firebase Login
         await signInWithEmailAndPassword(auth, email, password);
-        alert('Logged in successfully!');
       }
+
       // Save session to localStorage
       localStorage.setItem('isLoggedIn', 'true');
-      setError('');
       setEmail('');
       setPassword('');
-      navigate('/admin'); // Redirect to the protected page
+      navigate('/profile');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    setLoading(true);
+    setError('');
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUid = result.user.uid;
+      const email = result.user.email;
+
+      // Call the external API
+      await handleApiCall(firebaseUid, email);
+
+      alert('Logged in with Google successfully!');
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/profile'); // Redirect to the protected page
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,8 +130,13 @@ const AuthForm = () => {
                 required
               />
             </Form.Group>
-            <Button variant="primary" type="submit" className="w-100">
-              {isSignup ? 'Sign Up' : 'Login'}
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100"
+              disabled={loading}
+            >
+              {loading ? 'Please wait...' : isSignup ? 'Sign Up' : 'Login'}
             </Button>
           </Form>
           <div className="text-center mt-3">
@@ -75,6 +148,17 @@ const AuthForm = () => {
               {isSignup
                 ? 'Already have an account? Login'
                 : "Don't have an account? Sign Up"}
+            </Button>
+          </div>
+          <div className="text-center mt-4">
+            <p>Or sign in with</p>
+            <Button
+              variant="outline-danger"
+              className="w-100"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+            >
+              {loading ? 'Signing in...' : 'Google Sign-In'}
             </Button>
           </div>
         </Card.Body>

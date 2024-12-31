@@ -1,50 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Form, Accordion, Row, Col } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom';
+import '../styles/Home.css';
 
 const Home = () => {
   const [search, setSearch] = useState('');
   const [filteredLocations, setFilteredLocations] = useState([]);
-  const [locations, setLocations] = useState([]); // Dynamic locations from API
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [startDate, setStartDate] = useState(null);
+  const [locations, setLocations] = useState([]); // Locations fetched from API
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
-  // Simulate fetching locations from an API
-  useEffect(() => {
-    const fetchLocations = async () => {
-      // Dummy API response
-      const response = [
-        'London Savigny-sur-Seille, France',
-        'The London Pub, Rue Brocherie, Grenoble, France',
-        'London Pub, Rue Borville Dupuis, Evreux, France',
-        'The London Town, English Pub Toulouse',
-        'London Corner, Place Marcel Bouilloux-Lafont, Toulouse, France',
-        'Storage Facility A, City A',
-        'Storage Facility B, City B',
-        'Secure Storage Center, City C',
-        'Affordable Storage, City D',
-        'Luxury Storage, City E',
-      ];
+useEffect(() => {
+  const fetchLocations = async () => {
+    const apiUrl =
+      'https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/storage-location/list-storage-location';
 
-      // Simulate network delay
-      setTimeout(() => {
-        setLocations(response);
-      }, 1000); // Delay of 1 second
-    };
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch locations');
+      }
+      const data = await response.json();
 
-    fetchLocations();
-  }, []);
+      setData(data.data);
+
+      const locationTitles = data.data.map((item) => ({
+        id: item.storage_id,
+        title: item.title,
+        location: item.location,
+        eircode: item.eircode, // Add Eircode
+      }));
+
+      setLocations(locationTitles);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  fetchLocations();
+}, []);
 
   // Handle search input
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearch(query);
     if (query.length > 0) {
-      const results = locations.filter((location) =>
-        location.toLowerCase().includes(query)
+      const results = locations.filter((loc) =>
+          loc.title.toLowerCase().includes(query) ||
+          loc.location.toLowerCase().includes(query) ||
+          (loc.eircode && loc.eircode.toLowerCase().includes(query)) // Include Eircode in the search
       );
       setFilteredLocations(results);
     } else {
@@ -54,20 +64,29 @@ const Home = () => {
 
   // Handle search selection
   const handleLocationSelect = (location) => {
-    setSelectedLocation(location);
-    setSearch(location);
+    setSelectedLocation(location); // Store the full location object
+    setSearch(location.title);
     setFilteredLocations([]);
   };
 
   // Handle form submission
   const handleSearchSubmit = () => {
-    if (selectedLocation && startDate) {
-      navigate('/listings', {
-        state: { location: selectedLocation, date: startDate },
+    if (selectedLocation) {
+      navigate(`/storage/${selectedLocation.id}`, {
+        state: { storageId: selectedLocation.id, location: selectedLocation.location },
       });
     } else {
-      alert('Please select a location and date.');
+      alert('Please select a location.');
     }
+  };
+
+  const handleCardClick = (location) => {
+    navigate(`/storage/${location.storage_id}`, {
+      state: {
+        storageId: location.storage_id,
+        location: location.location,
+      },
+    });
   };
 
   return (
@@ -80,32 +99,28 @@ const Home = () => {
           <Form className="position-relative d-flex justify-content-center align-items-center mb-4">
             <Form.Control
               type="text"
-              placeholder="Enter a location"
+              placeholder="Enter a location or eircode"
               value={search}
               onChange={handleSearch}
               className="w-50 me-2"
+              disabled={loading}
             />
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              minDate={new Date()}
-              placeholderText="Select a date"
-              className="form-control me-2"
-            />
-            <Button variant="danger" onClick={handleSearchSubmit}>
-              Search
+            <Button variant="danger" onClick={handleSearchSubmit} disabled={loading}>
+              {loading ? 'Loading...' : 'Search'}
             </Button>
+
+            {error && <p className="text-danger text-center mt-3">{error}</p>}
 
             {filteredLocations.length > 0 && (
               <ul className="list-group position-absolute w-50" style={{ top: '100%', zIndex: 1000 }}>
-                {filteredLocations.map((location, index) => (
+                {filteredLocations.map((location) => (
                   <li
-                    key={index}
+                    key={location.id}
                     className="list-group-item"
                     onClick={() => handleLocationSelect(location)}
                     style={{ cursor: 'pointer' }}
                   >
-                    {location}
+                    {location.title} - {location.location}
                   </li>
                 ))}
               </ul>
@@ -135,6 +150,36 @@ const Home = () => {
           </Col>
         </Row>
       </Container>
+
+      {/* Storage Listings Marquee */}
+      <div className="scrollable-container bg-light py-4">
+        <Container>
+          <h3 className="text-center mb-4">Available Storage Spaces</h3>
+          <div className="scrollable-content">
+            {[...data, ...data].map((location, index) => (
+              <div
+                key={`${location.storage_id}-${index}`}
+                className="scrollable-card"
+                onClick={() => handleCardClick(location)}
+                style={{ cursor: 'pointer' }} // Add a pointer cursor
+              >
+                <img
+                  src={location.images_url || 'https://via.placeholder.com/300'}
+                  alt={location.title}
+                  className="scrollable-card-img"
+                />
+                <div className="scrollable-card-body">
+                  <h5 className="scrollable-card-title">{location.title}</h5>
+                  <p><strong>Location:</strong> {location.location}</p>
+                  <p><strong>Price:</strong> €{location.price_per_month} per month</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </div>
+
+
 
       {/* FAQ Section */}
       <Container className="my-5">

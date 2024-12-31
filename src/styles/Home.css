@@ -1,45 +1,57 @@
-/* Hero Section */
-.hero-section {
-    background: url('path-to-your-image.jpg') no-repeat center center/cover;
-    position: relative;
-    height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* Scrollable Container */
+.scrollable-container {
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+}
 
-  .hero-section .overlay {
-    background: rgba(0, 0, 0, 0.6);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+.scrollable-content {
+  display: flex;
+  gap: 1rem; /* Add spacing between cards */
+  animation: scroll 15s linear infinite;
+}
 
-  .hero-section h1,
-  .hero-section p {
-    z-index: 1;
-  }
+.scrollable-content:hover {
+  animation-play-state: paused; /* Pause animation on hover */
+}
 
-  /* Storage Card Hover */
-  .storage-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
+.scrollable-card {
+  flex: 0 0 auto;
+  width: 300px;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  white-space: normal; /* Allow text wrapping */
+  text-overflow: ellipsis;
+}
 
-  .storage-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  }
+.scrollable-card-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+}
 
-  /* Testimonials */
-  blockquote {
-    font-size: 1.2rem;
-    font-style: italic;
-    color: #555;
-  }
+.scrollable-card-body {
+  margin-top: 0.5rem;
+}
 
-  /* FAQ Accordion */
-  .accordion-button:focus {
-    box-shadow: none;
+.scrollable-card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Scroll Animation */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-50%);
+  }
+}
