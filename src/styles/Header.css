@@ -3,7 +3,7 @@
 /* Navbar brand styling */
 .navbar-brand {
     font-size: 1.5rem;
-    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background: linear-gradient(45deg, #ffcd39, #feb47b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

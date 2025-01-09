@@ -1,32 +1,34 @@
 import React, { useContext } from 'react';
-import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { Navbar, Nav, Button, Container, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { auth } from '../firebase';
 import { AuthContext } from '../context/AuthContext';
+import { UserContext } from '../context/UserContext';
 import '../styles/Header.css'; // Optional for custom styles
 
 const Header = () => {
   const { user } = useContext(AuthContext);
-
-  // Retrieve the user name from localStorage
-  const userName = localStorage.getItem('name');
+  const { userName } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear local storage
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('name');
-    localStorage.removeItem('id');
-    localStorage.removeItem('startDate');
-    localStorage.removeItem('endDate');
+    auth.signOut()
+      .then(() => {
+        // Clear local storage
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('name');
+        localStorage.removeItem('id');
+        localStorage.removeItem('startDate');
+        localStorage.removeItem('endDate');
 
-    // Sign out the user
-    auth.signOut().then(() => {
-      // Reload the page after signing out
-      window.location.reload();
-    }).catch((error) => {
-      console.error('Error during logout:', error);
-    });
+        // Redirect to login
+        navigate('/auth');
+      })
+      .catch((error) => {
+        console.error('Error during logout:', error);
+      });
   };
 
   return (
@@ -47,23 +49,36 @@ const Header = () => {
             <Nav.Link as={Link} to="/" className="mx-2">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/about" className="mx-2">
-              About
-            </Nav.Link>
             <Nav.Link as={Link} to="/storages/all" className="mx-2">
               Available Storages
             </Nav.Link>
 
-            {/* Admin-Only Links */}
+            {/* Admin Links */}
             {user && user.role === 'admin' && (
               <>
-                <Nav.Link as={Link} to="/rentals/all" className="mx-2">
-                  All Rentals
+                <Nav.Link as={Link} to="/admin" className="mx-2">
+                  Dashboard
                 </Nav.Link>
+                <NavDropdown
+                  title="My Rentals & Storages"
+                  id="nav-dropdown"
+                  className="mx-2"
+                >
+                  <NavDropdown.Item
+                    onClick={() => navigate('/rentals/listings')}
+                  >
+                    My Rentals
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    onClick={() => navigate('/storage/listings')}
+                  >
+                    My Storages
+                  </NavDropdown.Item>
+                </NavDropdown>
               </>
             )}
 
-            {/* User-Only Links */}
+            {/* User Links */}
             {user && user.role === 'user' && (
               <>
                 <Nav.Link as={Link} to="/rentals/listings" className="mx-2">
@@ -82,7 +97,7 @@ const Header = () => {
                   {userName || 'User'}
                 </Nav.Link>
                 <Button
-                  variant="outline-light"
+                  variant="outline-warning"
                   className="mx-2"
                   onClick={handleLogout}
                 >
@@ -91,7 +106,7 @@ const Header = () => {
               </div>
             ) : (
               <Nav.Link as={Link} to="/auth" className="mx-2">
-                <Button variant="outline-light">Login</Button>
+                <Button variant="outline-warning">Login</Button>
               </Nav.Link>
             )}
           </Nav>

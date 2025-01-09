@@ -1,20 +1,42 @@
 /* Scrollable Container */
 .scrollable-container {
-  overflow: hidden;
   position: relative;
-  white-space: nowrap;
+  overflow: hidden;
+  /* You generally don’t need `white-space: nowrap;`
+     since we’re using flex. */
 }
 
+/* The scrolling content.
+   We’re duplicating the data inside so that it appears continuous. */
 .scrollable-content {
   display: flex;
-  gap: 1rem; /* Add spacing between cards */
-  animation: scroll 15s linear infinite;
+  gap: 1rem;
+  /* spacing between cards */
+  /* We want this to be as wide as all of its child items combined. */
+  width: max-content;
+
+  /* The marquee effect (scrolls horizontally) */
+  animation: scroll 50s linear infinite;
 }
 
 .scrollable-content:hover {
-  animation-play-state: paused; /* Pause animation on hover */
+  animation-play-state: paused;
+  /* Pause animation on hover */
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    /* Move left by half the total width if you duplicated items.
+       Adjust the value until it smoothly loops. */
+    transform: translateX(-50%);
+  }
+}
+
+/* Single card style */
 .scrollable-card {
   flex: 0 0 auto;
   width: 300px;
@@ -25,8 +47,16 @@
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  white-space: normal; /* Allow text wrapping */
+  /* White-space normal & text-overflow ellipsis for text handling */
+  white-space: normal;
   text-overflow: ellipsis;
+  position: relative;
+  /* for any absolute-positioned elements inside */
+  transition: transform 0.2s ease;
+}
+
+.scrollable-card:hover {
+  transform: translateY(-5px);
 }
 
 .scrollable-card-img {
@@ -46,12 +76,12 @@
   margin-bottom: 0.5rem;
 }
 
-/* Scroll Animation */
-@keyframes scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
+.header-warning {
+  .accordion-button:not(.collapsed) {
+    background-color: var(--bs-warning) !important;
+    /* #ffc107 */
+    color: #212529 !important;
+    border: none !important;
+    /* optional: remove any borders */
   }
 }

@@ -10,7 +10,6 @@ const AddStorage = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log('Submitted Data:', formData);
   };
 
   return (
@@ -36,7 +35,7 @@ const AddStorage = () => {
           onChange={handleChange}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="warning" type="submit">
         Add Storage
       </Button>
     </Form>

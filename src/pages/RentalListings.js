@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { listRentalByRenterId, deleteRental } from '../services/rentalService';
-import { Container, Table, Alert, Spinner, Button, Modal, Row, Col } from 'react-bootstrap';
+import { Container, Table, Alert, Spinner, Button, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import ReviewsModal from '../components/ReviewsModal';
+import RentalDetailsModal from '../components/RentalDetailsModal';
 
 const RentalsByRenter = () => {
   const [rentals, setRentals] = useState([]);
@@ -9,6 +11,8 @@ const RentalsByRenter = () => {
   const [error, setError] = useState('');
   const [selectedRental, setSelectedRental] = useState(null);
   const [rentalToDelete, setRentalToDelete] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   const navigate = useNavigate();
 
   const renterId = localStorage.getItem('id'); // Get Renter ID from localStorage
@@ -41,6 +45,21 @@ const RentalsByRenter = () => {
     }
   };
 
+  const fetchReviews = async (storageId) => {
+    try {
+      const apiUrl = `https://0ixtfa5608.execute-api.eu-west-1.amazonaws.com/prod/review-service/list-reviews-by-storage-id?storage_id=${storageId}`;
+      const response = await fetch(apiUrl);
+      if (!response.ok) throw new Error('Failed to fetch reviews');
+      const data = await response.json();
+      localStorage.setItem('storage_id', storageId);
+      setReviews(data.data || []);
+      setShowReviewsModal(true);
+
+    } catch (err) {
+      setError(err.message || 'Failed to fetch reviews.');
+    }
+  };
+
   const handleDeleteRental = async () => {
     if (!rentalToDelete) return;
 
@@ -61,12 +80,19 @@ const RentalsByRenter = () => {
     setSelectedRental(rental); // Set the selected rental for the modal
   };
 
+  // Helper function to check if a rental is deletable
+  const isDeletable = (endDate) => {
+    const today = new Date();
+    const rentalEndDate = new Date(endDate);
+    return rentalEndDate >= today; // Deletable only if the end date is today or in the future
+  };
+
   return (
     <Container className="my-5">
       <h2 className="text-center mb-4">My Rentals</h2>
       {loading && (
         <div className="text-center">
-          <Spinner animation="border" />
+          <Spinner animation="border" variant='warning' />
           <p>Loading rentals...</p>
         </div>
       )}
@@ -75,7 +101,7 @@ const RentalsByRenter = () => {
       {!loading && !error && (
         <>
           <div className="d-flex justify-content-between mb-3">
-            <Button variant="primary" onClick={handleAddRental}>
+            <Button variant="warning" onClick={handleAddRental}>
               Add Rental
             </Button>
           </div>
@@ -83,7 +109,8 @@ const RentalsByRenter = () => {
             <thead>
               <tr>
                 <th>Rental ID</th>
-                <th>Storage ID</th>
+                <th>Storage Title</th>
+                <th>Eircode</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Total Price</th>
@@ -95,22 +122,51 @@ const RentalsByRenter = () => {
               {rentals.map((rental) => (
                 <tr key={rental.rental_id} onClick={() => handleRentalClick(rental)} style={{ cursor: 'pointer' }}>
                   <td>{rental.rental_id}</td>
-                  <td>{rental.storage_id}</td>
+                  <td>{rental.storage_title}</td>
+                  <td>{rental.eircode}</td>
                   <td>{new Date(rental.start_date).toLocaleDateString()}</td>
                   <td>{new Date(rental.end_date).toLocaleDateString()}</td>
                   <td>€{rental.total_price}</td>
                   <td>{rental.payment_status}</td>
                   <td>
+                    <OverlayTrigger
+                      overlay={
+                        !isDeletable(rental.end_date) ? (
+                          <Tooltip id={`tooltip-${rental.rental_id}`}>
+                            Rentals with a past end date cannot be deleted.
+                          </Tooltip>
+                        ) : (
+                          <></> // Provide an empty fragment or valid React node when deletable
+                        )
+                      }
+                    >
+                      <span className="d-inline-block">
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setRentalToDelete(rental); // Open delete confirmation modal
+                          }}
+                          disabled={!isDeletable(rental.end_date)} // Disable button for past rentals
+                        >
+                          <i className="bi bi-trash-fill me-1"></i>
+                        </Button>
+                      </span>
+                    </OverlayTrigger>
                     <Button
-                      variant="danger"
+                      variant="warning"
                       size="sm"
+                      className="ms-2"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setRentalToDelete(rental); // Open delete confirmation modal
+                        fetchReviews(rental.storage_id); // Fetch reviews for the associated storage ID
                       }}
+                      disabled={new Date(rental.end_date) >= new Date()} // Disable button if end date is in the future or today
                     >
-                      Delete
+                      View Reviews
                     </Button>
+
                   </td>
                 </tr>
               ))}
@@ -124,86 +180,12 @@ const RentalsByRenter = () => {
       )}
 
       {/* Rental Details Modal */}
-      <Modal show={!!selectedRental} onHide={() => setSelectedRental(null)} size="lg" centered>
-        <Modal.Header closeButton className="bg-primary text-white">
-          <Modal.Title>Rental Details</Modal.Title>
-        </Modal.Header>
-        {selectedRental && (
-          <Modal.Body>
-            <Container>
-              {/* Rental and Storage Details */}
-              <Row>
-                <Col md={6}>
-                  <h5 className="text-primary mb-3"><i className="bi bi-box-seam"></i> Rental Information</h5>
-                  <div className="p-3 border rounded">
-                    <p><strong>Rental ID:</strong> {selectedRental.rental_id}</p>
-                    <p><strong>Start Date:</strong> {new Date(selectedRental.start_date).toLocaleDateString()}</p>
-                    <p><strong>End Date:</strong> {new Date(selectedRental.end_date).toLocaleDateString()}</p>
-                    <p><strong>Total Price:</strong> €{selectedRental.total_price}</p>
-                    <p>
-                      <strong>Payment Status:</strong>{' '}
-                      <span className={`ms-2 badge ${selectedRental.payment_status === 'paid' ? 'bg-success' : 'bg-warning'}`}>
-                        {selectedRental.payment_status}
-                      </span>
-                    </p>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <h5 className="text-primary mb-3"><i className="bi bi-house-door"></i> Storage Information</h5>
-                  <div className="p-3 border rounded d-flex align-items-center">
-                    {/* Image Positioned Here */}
-                    <img
-                      src={
-                        roomTypeImageUrls[selectedRental.storage_type] ||
-                        'https://via.placeholder.com/300' // Default image if no type matches
-                      }
-                      alt={selectedRental.storage_type || 'Storage Type'}
-                      className="img-fluid rounded shadow me-3"
-                      style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                    />
-                    {/* Storage Details */}
-                    <div>
-                      <p><strong>Title:</strong> {selectedRental.storage_title}</p>
-                      <p><strong>Description:</strong> {selectedRental.storage_description}</p>
-                      <p><strong>Size:</strong> {selectedRental.storage_size}m²</p>
-                      <p><strong>Location:</strong> {selectedRental.storage_location}</p>
-                      <p><strong>Eircode:</strong> {selectedRental.eircode || 'N/A'}</p>
-                      <p><strong>Type:</strong> {selectedRental.storage_type}</p>
-                      <p><strong>Price Per Month:</strong> €{selectedRental.price_per_month}</p>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-
-              {/* Additional Details */}
-              <Row className="mt-4">
-                <Col md={6}>
-                  <h5 className="text-primary mb-3"><i className="bi bi-person"></i> Renter Information</h5>
-                  <div className="p-3 border rounded">
-                    <p><strong>Name:</strong> {selectedRental.renter_name}</p>
-                    <p><strong>Email:</strong> {selectedRental.renter_email}</p>
-                    <p><strong>Phone:</strong> {selectedRental.renter_phone || 'N/A'}</p>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <h5 className="text-primary mb-3"><i className="bi bi-person-badge"></i> Owner Information</h5>
-                  <div className="p-3 border rounded">
-                    <p><strong>Name:</strong> {selectedRental.owner_name}</p>
-                    <p><strong>Email:</strong> {selectedRental.owner_email}</p>
-                    <p><strong>Phone:</strong> {selectedRental.owner_phone || 'N/A'}</p>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          </Modal.Body>
-        )}
-        <Modal.Footer className="justify-content-between">
-          <Button variant="danger" onClick={() => setSelectedRental(null)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
+      <RentalDetailsModal
+        show={!!selectedRental}
+        onHide={() => setSelectedRental(null)}
+        rental={selectedRental}
+        roomTypeImageUrls={roomTypeImageUrls}
+      />
       {/* Delete Confirmation Modal */}
       <Modal
         show={!!rentalToDelete}
@@ -229,7 +211,13 @@ const RentalsByRenter = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
+      {/* Reviews Modal */}
+      <ReviewsModal
+        show={showReviewsModal}
+        onHide={() => setShowReviewsModal(false)}
+        reviews={reviews}
+        fetchReviews={fetchReviews}
+      />
     </Container>
   );
 };

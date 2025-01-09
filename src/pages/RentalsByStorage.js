@@ -42,8 +42,8 @@ const RentalsByStorage = () => {
             required
           />
         </Form.Group>
-        <Button type="submit" variant="primary" disabled={loading}>
-          {loading ? <Spinner animation="border" size="sm" /> : 'Fetch Rentals'}
+        <Button type="submit" variant="warning" disabled={loading}>
+          {loading ? <Spinner animation="border" size="sm" variant='warning'/> : 'Fetch Rentals'}
         </Button>
       </Form>
 

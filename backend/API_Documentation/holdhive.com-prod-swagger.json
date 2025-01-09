@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2024-12-30T22:57:31Z",
+    "version" : "2025-01-01T02:02:18Z",
     "title" : "holdhive.com"
   },
   "host" : "0ixtfa5608.execute-api.eu-west-1.amazonaws.com",
@@ -912,6 +912,49 @@
         }
       }
     },
+    "/review-service/list-reviews-by-user-id" : {
+      "get" : {
+        "description" : "Retrieves all reviews left by a specific user (user_id).",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user_id",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/ListReviewsByUserIdResponse"
+            }
+          }
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "/review-service/update-review-by-id" : {
       "post" : {
         "description" : "Updates a review by its review_id. Useful for editing review content or ratings.",
@@ -1783,6 +1826,75 @@
         }
       },
       "title" : "DeleteReviewByIdRequest"
+    },
+    "ListReviewsByUserIdResponse" : {
+      "type" : "object",
+      "required" : [ "data", "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "General message indicating the result of the operation (e.g., 'Reviews for user fetched successfully')."
+        },
+        "data" : {
+          "type" : "array",
+          "description" : "An array containing information about each review left by the user.",
+          "items" : {
+            "type" : "object",
+            "description" : "Details of an individual review left by the user.",
+            "properties" : {
+              "review_id" : {
+                "type" : "integer",
+                "description" : "The unique ID of the review."
+              },
+              "storage_id" : {
+                "type" : "integer",
+                "description" : "The ID of the storage location that the review is for."
+              },
+              "rating" : {
+                "type" : "integer",
+                "description" : "The rating given by the user (likely between 1 and 5)."
+              },
+              "comment" : {
+                "type" : "string",
+                "description" : "The text comment written by the user in the review."
+              },
+              "review_created_at" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "The date and time the review was created (YYYY-MM-DDTHH:MM:SS.sssZ)."
+              },
+              "storage_title" : {
+                "type" : "string",
+                "description" : "The title of the storage location."
+              },
+              "storage_description" : {
+                "type" : "string",
+                "description" : "A description of the storage location."
+              },
+              "storage_location" : {
+                "type" : "string",
+                "description" : "The general location of the storage location (e.g., '202 Birch St, Kilkenny')."
+              },
+              "storage_price" : {
+                "type" : "number",
+                "description" : "The monthly price for renting the storage location."
+              },
+              "owner_name" : {
+                "type" : "string",
+                "description" : "The name of the owner of the storage location."
+              },
+              "owner_email" : {
+                "type" : "string",
+                "format" : "email",
+                "description" : "The email address of the owner of the storage location."
+              }
+            },
+            "required" : [ "comment", "owner_email", "owner_name", "rating", "review_created_at", "review_id", "storage_description", "storage_id", "storage_location", "storage_price", "storage_title" ]
+          }
+        }
+      },
+      "title" : "ListReviewsByUserIdResponse",
+      "description" : "Response containing a list of reviews left by a specific user identified by their ID."
     },
     "Empty" : {
       "type" : "object",

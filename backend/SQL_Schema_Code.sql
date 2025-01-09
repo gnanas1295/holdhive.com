@@ -135,6 +135,8 @@ select * from Users;
 
 UPDATE Users SET role_id = 1001 WHERE user_id = 'r3u1PjtEUcXfkHYs8p6ITHUN7wn2';
 
+UPDATE users SET profile_image_url = 'https://holdhive.s3.eu-west-1.amazonaws.com/Avator/Profile_Image_Women_4.png' where user_id = 'user5';
+
 Delete from Users where name = 'Mrudula Didde';
 
 --Storage Table
@@ -146,6 +148,43 @@ INSERT INTO StorageSpaces (owner_id, title, description, size, location, price_p
 ('user5', 'Large Shed in Kilkenny', 'Outdoor storage with enough space for gardening equipment and tools.', 20.0, '202 Birch St, Kilkenny', 120.00, 'available', '["http://example.com/shed1.jpg"]', 0, GETDATE(), GETDATE());
 
 select * from storagespaces;
+
+UPDATE StorageSpaces SET images_url = 'https://holdhive.s3.eu-west-1.amazonaws.com/Storage_Spaces_Images/Empty_Roof.jpg' where storage_id = '10041';
+
+SELECT 
+    s.storage_id,
+    s.owner_id,
+    s.title,
+    s.description,
+    s.size,
+    s.location,
+    s.price_per_month,
+    s.availability,
+    s.images_url,
+    s.insurance_option,
+    s.eircode,
+    s.storage_type,
+    s.created_at,
+    s.updated_at,
+    COALESCE(r.average_review_score, 0) AS average_review_score,
+    COALESCE(r.review_ids, '[]') AS review_ids
+FROM 
+    StorageSpaces s
+LEFT JOIN 
+    (
+        SELECT 
+            storage_id,
+            AVG(rating) AS average_review_score,
+            STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+        FROM 
+            Reviews
+        GROUP BY 
+            storage_id
+    ) r ON s.storage_id = r.storage_id
+WHERE 
+    s.storage_id = '10005';
+
+
 
 Update storagespaces SET eircode = 'D02 X285' where storage_id = '10001';
 Update storagespaces SET eircode = 'T12 A8RP' where storage_id = '10002';
@@ -163,6 +202,46 @@ INSERT INTO Rentals (storage_id, renter_id, start_date, end_date, total_price, p
 
 select * from rentals;
 
+SELECT 
+            s.storage_id, 
+            s.owner_id, 
+            s.title, 
+            s.description, 
+            s.size, 
+            s.location, 
+            s.price_per_month, 
+            s.availability, 
+            s.images_url, 
+            s.insurance_option, 
+            s.eircode, 
+            s.storage_type, 
+            s.created_at, 
+            s.updated_at,
+            u.name AS owner_name, 
+            u.email AS owner_email, 
+            u.phone AS owner_phone,
+            COALESCE(r.average_review_score, 0) AS average_review_score,
+            COALESCE(r.review_ids, '[]') AS review_ids
+        FROM 
+            StorageSpaces s
+        JOIN 
+            Users u ON s.owner_id = u.user_id
+        LEFT JOIN 
+            (
+                SELECT 
+                    storage_id,
+                    AVG(rating) AS average_review_score,
+                    STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+                FROM 
+                    Reviews
+                GROUP BY 
+                    storage_id
+            ) r ON s.storage_id = r.storage_id
+        WHERE 
+            s.owner_id = 'user4';
+
+
+
 --Reviews Table
 INSERT INTO Reviews (storage_id, user_id, rating, comment, created_at) VALUES
 (10001, 'user3', 5, 'Great space! Perfect for storing my car and furniture.', GETDATE()),
@@ -173,6 +252,124 @@ INSERT INTO Reviews (storage_id, user_id, rating, comment, created_at) VALUES
 
 select * from reviews;
 
+
+ -- List reviews by User-ID:
+SELECT 
+                    r.review_id,
+                    r.storage_id,
+                    r.rating,
+                    r.comment,
+                    r.created_at AS review_created_at,
+                    s.title AS storage_title,
+                    s.description AS storage_description,
+                    s.location AS storage_location,
+                    s.price_per_month AS storage_price,
+                    u.name AS owner_name,
+                    u.email AS owner_email,
+                    u.phone AS owner_phone,
+                    rentals.rental_id
+                FROM 
+                    Reviews r
+                LEFT JOIN 
+                    StorageSpaces s ON r.storage_id = s.storage_id
+                LEFT JOIN 
+                    Users u ON s.owner_id = u.user_id
+                LEFT JOIN 
+                    Rentals rentals ON r.storage_id = rentals.storage_id AND rentals.renter_id = 'mtrrg0m6m1cCZx52DEvjysEwMyB3'
+                WHERE 
+                    r.user_id = 'mtrrg0m6m1cCZx52DEvjysEwMyB3';
+
+
+WITH ReviewDetails AS (
+    SELECT 
+        r.review_id,
+        r.storage_id,
+        r.rating,
+        r.comment,
+        r.created_at AS review_created_at
+    FROM 
+        Reviews r
+    WHERE 
+        r.user_id = 'r3u1PjtEUcXfkHYs8p6ITHUN7wn2'
+),
+StorageDetails AS (
+    SELECT 
+        s.storage_id,
+        s.title AS storage_title,
+        s.location AS storage_location,
+        s.price_per_month AS storage_price,
+        u.name AS owner_name,
+        u.email AS owner_email,
+        u.phone AS owner_phone
+    FROM 
+        StorageSpaces s
+    JOIN 
+        Users u ON s.owner_id = u.user_id
+),
+RentalDetails AS (
+    SELECT 
+        rentals.storage_id,
+        MAX(rentals.rental_id) AS rental_id
+    FROM 
+        Rentals rentals
+    WHERE 
+        rentals.renter_id = 'r3u1PjtEUcXfkHYs8p6ITHUN7wn2'
+    GROUP BY 
+        rentals.storage_id
+)
+SELECT 
+    rd.review_id,
+    rd.storage_id,
+    rd.rating,
+    rd.comment,
+    rd.review_created_at,
+    sd.storage_title,
+    sd.storage_location,
+    sd.storage_price,
+    sd.owner_name,
+    sd.owner_email,
+    sd.owner_phone,
+    COALESCE(rd.rating, 0) AS average_review_score,
+    COALESCE(rd.review_id, '') AS review_ids,
+    rd.comment
+FROM 
+    ReviewDetails rd
+LEFT JOIN 
+    StorageDetails sd ON rd.storage_id = sd.storage_id
+LEFT JOIN 
+    RentalDetails rt ON rd.storage_id = rt.storage_id;
+
+
+
+
+
+--List reviews by the owner id or user owner of:
+WITH AvgRatings AS (
+                    SELECT 
+                        storage_id,
+                        AVG(rating) AS average_rating
+                    FROM Reviews
+                    GROUP BY storage_id
+                ),
+                RankedReviews AS (
+                    SELECT 
+                        r.review_id, r.rating, r.comment, r.created_at, 
+                        r.user_id AS reviewer_id, u_reviewer.name AS reviewer_name, u_reviewer.email AS reviewer_email, 
+                        CAST(u_reviewer.profile_image_url AS NVARCHAR(MAX)) AS reviewer_profile_image,
+                        s.storage_id, s.owner_id, u_owner.name AS owner_name, u_owner.email AS owner_email,
+                        s.title AS storage_title, CAST(s.description AS NVARCHAR(MAX)) AS storage_description,
+                        s.price_per_month as storage_price,s.location as storage_location, ar.average_rating,
+                        ROW_NUMBER() OVER (PARTITION BY r.review_id ORDER BY r.created_at DESC) AS row_num
+                    FROM Reviews r
+                    JOIN StorageSpaces s ON r.storage_id = s.storage_id
+                    JOIN Users u_reviewer ON r.user_id = u_reviewer.user_id
+                    JOIN Users u_owner ON s.owner_id = u_owner.user_id
+                    LEFT JOIN AvgRatings ar ON r.storage_id = ar.storage_id
+                    WHERE s.owner_id = 'mtrrg0m6m1cCZx52DEvjysEwMyB3'
+                )
+                SELECT * 
+                FROM RankedReviews
+                WHERE row_num = 1;
 --Payments Table
 INSERT INTO Payments (rental_id, payment_method, amount, status, created_at, updated_at) VALUES
 (101, 'Stripe', 1500.00, 'completed', GETDATE(), GETDATE()),

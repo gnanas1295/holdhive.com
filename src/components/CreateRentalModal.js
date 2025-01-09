@@ -188,11 +188,11 @@ const CreateRentalModal = ({ show, onClose, onRentalCreated }) => {
           Cancel
         </Button>
         <Button
-          variant="primary"
+          variant="warning"
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <Spinner animation="border" size="sm" /> : 'Save'}
+          {loading ? <Spinner animation="border" size="sm" variant='warning' /> : 'Save'}
         </Button>
       </Modal.Footer>
     </Modal>

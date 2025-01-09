@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
           displayName: currentUser.displayName,
           role: localStorage.getItem('userRole') || 'user', // Fetch role from localStorage
         });
+        localStorage.setItem('id', currentUser.uid);
       } else {
         setUser(null);
       }
@@ -31,17 +32,32 @@ export const AuthProvider = ({ children }) => {
     window.location.reload(); // Hard refresh after login
   };
 
-  const logout = () => {
-    auth.signOut().then(() => {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('userRole');
-      setUser(null);
-      window.location.reload(); // Hard refresh after logout
+  const logout = async () => {
+  try {
+    await auth.signOut();
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    setUser(null);
+    window.location.replace('/auth');
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+};
+
+
+  const refreshRole = () => {
+    const newRole = localStorage.getItem('userRole') || 'user';
+    setUser((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        role: newRole,
+      };
     });
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );
