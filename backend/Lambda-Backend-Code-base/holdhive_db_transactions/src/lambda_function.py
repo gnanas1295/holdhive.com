@@ -19,48 +19,163 @@ def lambda_handler(event, context):
         # Storage API
         if action == "list_all_storage_locations":
             # Fetch all available storage locations -> Working as expected
-            # query = "SELECT * FROM StorageSpaces WHERE availability = 'available';"
-            query = "SELECT * FROM StorageSpaces WHERE availability = ?;"
+            query = """
+                SELECT 
+                    s.storage_id,
+                    s.owner_id,
+                    s.title,
+                    s.description,
+                    s.size,
+                    s.location,
+                    s.price_per_month,
+                    s.availability,
+                    s.images_url,
+                    s.insurance_option,
+                    s.eircode,
+                    s.storage_type,
+                    s.created_at,
+                    s.updated_at,
+                    COALESCE(r.average_review_score, 0) AS average_review_score,
+                    COALESCE(r.review_ids, '[]') AS review_ids
+                FROM 
+                    StorageSpaces s
+                LEFT JOIN 
+                    (
+                        SELECT 
+                            storage_id,
+                            AVG(rating) AS average_review_score,
+                            STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+                        FROM 
+                            Reviews
+                        GROUP BY 
+                            storage_id
+                    ) r ON s.storage_id = r.storage_id
+                WHERE 
+                    s.availability = ?;
+            """
             params = ('available',)
-            result = execute_query(query, params)
-            print(f"Result: {result}")
-            return format_response(200, result)
+            results = execute_query(query, params)
+            if not results:
+                return format_response(200, {"message": "No available storage locations found", "data": []})
+            for result in results:
+                if result.get("review_ids"):
+                    result["review_ids"] = result["review_ids"].split(",")
+            print(f"Result: {results}")
+            return format_response(200, results)
 
         elif action == "check_available_storage":
             # Fetch available storage locations based on the given date range
             start_date = data.get("start_date")
             end_date = data.get("end_date")
-
             if not start_date or not end_date:
                 return {"statusCode": 400, "body": {"error": "start_date and end_date are required"}}
-
             query = """
-                SELECT s.*
-                FROM StorageSpaces s
-                WHERE s.availability = 'available'
-                AND NOT EXISTS (
-                    SELECT 1
-                    FROM Rentals r
-                    WHERE r.storage_id = s.storage_id
-                        AND (
-                            (r.start_date < ? AND r.end_date > ?) -- Rentals that overlap at the start
-                            OR
-                            (r.start_date <= ? AND r.end_date >= ?) -- Rentals entirely within the query range
-                            OR
-                            (r.start_date >= ? AND r.start_date <= ?) -- Rentals that overlap at the end
-                        )
-                );
+                SELECT 
+                    s.storage_id,
+                    s.owner_id,
+                    s.title,
+                    s.description,
+                    s.size,
+                    s.location,
+                    s.price_per_month,
+                    s.availability,
+                    s.images_url,
+                    s.insurance_option,
+                    s.eircode,
+                    s.storage_type,
+                    s.created_at,
+                    s.updated_at,
+                    COALESCE(r.average_review_score, 0) AS average_review_score,
+                    COALESCE(r.review_ids, '[]') AS review_ids
+                FROM 
+                    StorageSpaces s
+                LEFT JOIN 
+                    (
+                        SELECT 
+                            storage_id,
+                            AVG(rating) AS average_review_score,
+                            STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+                        FROM 
+                            Reviews
+                        GROUP BY 
+                            storage_id
+                    ) r ON s.storage_id = r.storage_id
+                WHERE 
+                    s.availability = 'available'
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM Rentals r
+                        WHERE r.storage_id = s.storage_id
+                            AND (
+                                (r.start_date < ? AND r.end_date > ?) -- Rentals that overlap at the start
+                                OR
+                                (r.start_date <= ? AND r.end_date >= ?) -- Rentals entirely within the query range
+                                OR
+                                (r.start_date >= ? AND r.start_date <= ?) -- Rentals that overlap at the end
+                            )
+                    );
             """
             params = (end_date,start_date,end_date,start_date,start_date,end_date)
             results = execute_query(query, params)
+            if not results:
+                return format_response(200, {"message": "No available storage locations found", "data": []})
+            # Convert review_ids from a comma-separated string to a list
+            for result in results:
+                if result.get("review_ids"):
+                    result["review_ids"] = result["review_ids"].split(",")
             return {"statusCode": 200, "body": results}
 
         elif action == "fetch_storage_by_id":
             # Fetch a specific storage location by ID
-            query = "SELECT * FROM StorageSpaces WHERE storage_id = ?;"
-            params = (data.get("storage_id"),)
-            result = execute_query(query, params)
-            return {"statusCode": 200, "body": result}
+            storage_id = data.get("storage_id")
+            query = """
+                SELECT 
+                    s.storage_id,
+                    s.owner_id,
+                    s.title,
+                    s.description,
+                    s.size,
+                    s.location,
+                    s.price_per_month,
+                    s.availability,
+                    s.images_url,
+                    s.insurance_option,
+                    s.eircode,
+                    s.storage_type,
+                    s.created_at,
+                    s.updated_at,
+                    COALESCE(r.average_review_score, 0) AS average_review_score,
+                    COALESCE(r.review_ids, '[]') AS review_ids
+                FROM 
+                    StorageSpaces s
+                LEFT JOIN 
+                    (
+                        SELECT 
+                            storage_id,
+                            AVG(rating) AS average_review_score,
+                            STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+                        FROM 
+                            Reviews
+                        GROUP BY 
+                            storage_id
+                    ) r ON s.storage_id = r.storage_id
+                WHERE 
+                    s.storage_id = ?;
+            """
+            params = (storage_id,)
+            results = execute_query(query, params)
+            if not results:
+                return {
+                    "statusCode": 404,
+                    "body": {"message": f"Storage location with ID {storage_id} not found"}
+                }
+            # for result in results:
+            #     if result.get("review_ids"):
+            #         result["review_ids"] = result["review_ids"].split(",")
+            result = results[0]  # Since we're fetching a single record
+            if result.get("review_ids"):
+                result["review_ids"] = result["review_ids"].split(",")
+            return {"statusCode": 200, "body": results}
         
         elif action == "fetch_storage_by_owner_id":
             # Fetch all the storage location of the owner based upon his user_id
@@ -70,18 +185,58 @@ def lambda_handler(event, context):
 
             query = """
                 SELECT 
-                    s.storage_id, s.owner_id, s.title, s.description, s.size, 
-                    s.location, s.price_per_month, s.availability, s.images_url, 
-                    s.insurance_option, s.eircode, s.storage_type, 
-                    s.created_at, s.updated_at,
-                    u.name AS owner_name, u.email AS owner_email, u.phone AS owner_phone
-                FROM StorageSpaces s
-                JOIN Users u ON s.owner_id = u.user_id
-                WHERE s.owner_id = ?;
+                s.storage_id, 
+                s.owner_id, 
+                s.title, 
+                s.description, 
+                s.size, 
+                s.location, 
+                s.price_per_month, 
+                s.availability, 
+                s.images_url, 
+                s.insurance_option, 
+                s.eircode, 
+                s.storage_type, 
+                s.created_at, 
+                s.updated_at,
+                u.name AS owner_name, 
+                u.email AS owner_email, 
+                u.phone AS owner_phone,
+                COALESCE(r.average_review_score, 0) AS average_review_score,
+                COALESCE(r.review_ids, '[]') AS review_ids
+            FROM 
+                StorageSpaces s
+            JOIN 
+                Users u ON s.owner_id = u.user_id
+            LEFT JOIN 
+                (
+                    SELECT 
+                        storage_id,
+                        AVG(rating) AS average_review_score,
+                        STRING_AGG(CAST(review_id AS VARCHAR), ',') AS review_ids
+                    FROM 
+                        Reviews
+                    GROUP BY 
+                        storage_id
+                ) r ON s.storage_id = r.storage_id
+            WHERE 
+                s.owner_id = ?;
             """
             params = (owner_id,)
-            result = execute_query(query, params)
-            return {"statusCode": 200, "body": result}
+            results = execute_query(query, params)
+            # if not results:
+            #     return {
+            #         "statusCode": 200,
+            #         "body": {"message": f"No storage locations found for owner_id {owner_id}", "data": []}
+            #     }
+            if not results:
+                return {"statusCode": 200, "body": []}
+
+            # Convert review_ids from a comma-separated string to a list
+            for result in results:
+                if result.get("review_ids"):
+                    result["review_ids"] = result["review_ids"].split(",")
+            return {"statusCode": 200, "body": results}
 
         elif action == "add_storage_location":
             query = """
@@ -265,18 +420,52 @@ def lambda_handler(event, context):
             result = execute_query(query)
             return {"statusCode": 200, "body": result}
 
+        # elif action == "update_user_role":
+        #     #Updation of the Profile
+        #     user_email_id = data.get("email_id")
+        #     query = """
+        #         UPDATE Users
+        #         SET role_id = (SELECT role_id FROM Roles WHERE role_name = 'admin')
+        #         WHERE email = ?
+        #     """
+        #     params = (user_email_id)
+        #     execute_query(query, params, commit=True)
+        #     # execute_query(query, commit=True)
+        #     return format_response(200, {"message": "User Profile Updated to Admin Successfully"})
+
         elif action == "update_user_role":
-            #Updation of the Profile
+            # Update the user's role based on the current role
             user_email_id = data.get("email_id")
-            query = """
+            if not user_email_id:
+                return format_response(400, {"error": "email_id is required"})
+
+            # Query to get the current role of the user
+            query_check_role = """
+                SELECT r.role_name
+                FROM Users u
+                JOIN Roles r ON u.role_id = r.role_id
+                WHERE u.email = ?
+            """
+            params_check_role = (user_email_id,)
+            current_role_result = execute_query(query_check_role, params_check_role)
+
+            if not current_role_result:
+                return format_response(404, {"error": "User not found"})
+
+            # Determine the new role based on the current role
+            current_role = current_role_result[0]["role_name"]
+            new_role = "admin" if current_role == "user" else "user"
+
+            # Query to update the user's role
+            query_update_role = """
                 UPDATE Users
-                SET role_id = (SELECT role_id FROM Roles WHERE role_name = 'admin')
+                SET role_id = (SELECT role_id FROM Roles WHERE role_name = ?)
                 WHERE email = ?
             """
-            params = (user_email_id)
-            execute_query(query, params, commit=True)
-            # execute_query(query, commit=True)
-            return format_response(200, {"message": "User Profile Updated to Admin Successfully"})
+            params_update_role = (new_role, user_email_id)
+            execute_query(query_update_role, params_update_role, commit=True)
+
+            return format_response(200, {"message": f"User role updated to {new_role.capitalize()} successfully"})
 
         elif action == "remove_user":
             # Deletion of the user and related data
@@ -567,8 +756,7 @@ def lambda_handler(event, context):
             result = execute_query(query, params)
             return {"statusCode": 200, "body": result}
 
-
-        #List all Reviews based upon Owner ID
+        #List all Reviews based upon Owner ID / Reviews for all the Storage Location that the user is owned
         elif action == "list_reviews_by_owner_id":
             query = """
                 WITH AvgRatings AS (
@@ -585,7 +773,7 @@ def lambda_handler(event, context):
                         CAST(u_reviewer.profile_image_url AS NVARCHAR(MAX)) AS reviewer_profile_image,
                         s.storage_id, s.owner_id, u_owner.name AS owner_name, u_owner.email AS owner_email,
                         s.title AS storage_title, CAST(s.description AS NVARCHAR(MAX)) AS storage_description,
-                        ar.average_rating,
+                        s.price_per_month as storage_price,s.location AS storage_location,ar.average_rating,
                         ROW_NUMBER() OVER (PARTITION BY r.review_id ORDER BY r.created_at DESC) AS row_num
                     FROM Reviews r
                     JOIN StorageSpaces s ON r.storage_id = s.storage_id
@@ -602,6 +790,76 @@ def lambda_handler(event, context):
             result = execute_query(query, params)
             return {"statusCode": 200, "body": result}
 
+        #List all Reviews based upon the user ID / Reviews that the user have made
+        elif action == "list_reviews_by_user_id":
+            user_id = data.get("user_id")
+            if not user_id:
+                return {"statusCode": 400, "body": {"error": "user_id is required"}}
+
+            query = """
+                        WITH ReviewDetails AS (
+                        SELECT 
+                            r.review_id,
+                            r.storage_id,
+                            r.rating,
+                            r.comment,
+                            r.created_at AS review_created_at
+                        FROM 
+                            Reviews r
+                        WHERE 
+                            r.user_id = ?
+                    ),
+                    StorageDetails AS (
+                        SELECT 
+                            s.storage_id,
+                            s.title AS storage_title,
+                            s.location AS storage_location,
+                            s.price_per_month AS storage_price,
+                            u.name AS owner_name,
+                            u.email AS owner_email,
+                            u.phone AS owner_phone
+                        FROM 
+                            StorageSpaces s
+                        JOIN 
+                            Users u ON s.owner_id = u.user_id
+                    ),
+                    RentalDetails AS (
+                        SELECT 
+                            rentals.storage_id,
+                            MAX(rentals.rental_id) AS rental_id
+                        FROM 
+                            Rentals rentals
+                        WHERE 
+                            rentals.renter_id = ?
+                        GROUP BY 
+                            rentals.storage_id
+                    )
+                    SELECT 
+                        rd.review_id,
+                        rd.storage_id,
+                        rd.rating,
+                        rd.comment,
+                        rd.review_created_at,
+                        sd.storage_title,
+                        sd.storage_location,
+                        sd.storage_price,
+                        sd.owner_name,
+                        sd.owner_email,
+                        sd.owner_phone,
+                        COALESCE(rd.rating, 0) AS average_review_score,
+                        COALESCE(rd.review_id, '') AS review_ids,
+                        rd.comment
+                    FROM 
+                        ReviewDetails rd
+                    LEFT JOIN 
+                        StorageDetails sd ON rd.storage_id = sd.storage_id
+                    LEFT JOIN 
+                        RentalDetails rt ON rd.storage_id = rt.storage_id;
+
+            """
+            params = (user_id, user_id)
+            results = execute_query(query, params)
+            return {"statusCode": 200, "body": results}
 
         #List review based upon Review ID
         elif action == "list_review_by_review_id":
@@ -630,8 +888,6 @@ def lambda_handler(event, context):
             params = (data.get("review_id"),)
             result = execute_query(query, params)
             return {"statusCode": 200, "body": result}
-
-
 
         #Creation of the new Review
         elif action == "create_review":

@@ -57,7 +57,7 @@ def lambda_handler(event, context):
                         }
 
             elif path.startswith("/review-service/list-reviews-by-owner-id"):
-                # List reviews by storage owner
+                # List reviews by storage owner / List all the reviews of the storage the user is owner of
                 query_params = event.get("queryStringParameters", {})
                 owner_id = query_params.get("owner_id")
                 response = call_db_transactions("list_reviews_by_owner_id", {"owner_id": owner_id})
@@ -67,6 +67,27 @@ def lambda_handler(event, context):
                             "Access-Control-Allow-Origin": "*",
                         },
                         "body": json.dumps({"message": "Reviews for owner fetched successfully", "data": response})
+                        }
+            
+            elif path.startswith("/review-service/list-reviews-by-user-id"):
+                # List reviews by user / List all the reviews the user have made
+                query_params = event.get("queryStringParameters", {})
+                user_id = query_params.get("user_id")
+                if not user_id:
+                    return {
+                        "statusCode": 400,
+                        "headers": {
+                                "Access-Control-Allow-Origin": "*",
+                            },
+                        "body": json.dumps({"error": "user_id is required"})
+                    }
+                response = call_db_transactions("list_reviews_by_user_id", {"user_id": user_id})
+                return {
+                        "statusCode": 200,
+                        "headers": {
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                        "body": json.dumps({"message": "Reviews for user fetched successfully", "data": response})
                         }
             
             elif path.startswith("/review-service/list-reviews-by-review-id"):
@@ -81,7 +102,6 @@ def lambda_handler(event, context):
                         },
                         "body": json.dumps({"message": "Review fetched successfully", "data": response})
                         }
-
 
         elif http_method == "POST":
             action = data.get("action")

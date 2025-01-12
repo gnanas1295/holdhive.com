@@ -201,5 +201,10 @@ Resources:
           Properties:
             Path: /review-service/list-reviews-by-storage-id
             Method: GET
+        Api9:
+          Type: Api
+          Properties:
+            Path: /review-service/list-reviews-by-user-id
+            Method: GET
       RuntimeManagementConfig:
         UpdateRuntimeOn: Auto
