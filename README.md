@@ -16,6 +16,7 @@ A React-based project, built with Bootstrap for styling. This project uses dummy
 - **Frontend:** React, Bootstrap, React-Bootstrap
 - **Routing:** React Router
 - **State Management:** Local State (can be extended to use Redux or Context API)
+- **Backend:** Used AWS Lambda with Python running in 3.10V
 
 ## Project Setup
 
